@@ -4,7 +4,7 @@ import injectContext, { Context } from "./js/store/appContext.jsx";
 import { setWholesaleMode } from "./utils/wholesaleMode.js";
 
 // Vistas
-import Inicio from "./views/Inicio.jsx";
+import Inicio from "./views/InicioNuevo.jsx";
 import ProductDetail from "./views/ProductDetail.jsx";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register.jsx";
@@ -53,6 +53,7 @@ import desechables from '@/assets/desechables.png';
 import perfumes from '@/assets/perfumes.png';
 import accesorios from '@/assets/accesorios.png';
 import liquidos from '@/assets/liquidos.png';
+import InicioNuevo from "./views/InicioNuevo.jsx";
 
 
 // ===============================
@@ -145,8 +146,10 @@ const Layout = () => {
         <Routes>
 
           {/* Inicio */}
-          <Route path="/" element={<InicioWithSpinner images={inicioImages} />} />
-          <Route path="/inicio" element={<InicioWithSpinner images={inicioImages} />} />
+          {/*       <Route path="/" element={<InicioWithSpinner images={inicioImages} />} /> */}
+          <Route path="/" element={<InicioNuevo images={inicioImages} />} />
+          {/*     <Route path="/inicio" element={<InicioWithSpinner images={inicioImages} />} /> */}
+          <Route path="/inicio" element={<InicioNuevo />} />
 
           {/* Productos */}
           <Route path="/products" element={<ProductGrid />} />
