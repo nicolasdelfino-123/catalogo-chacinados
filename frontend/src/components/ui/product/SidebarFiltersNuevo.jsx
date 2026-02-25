@@ -246,9 +246,13 @@ export default function SidebarFiltersNuevo({
                             <li key={c.slug}>
                                 <button
                                     onClick={() => {
-                                        const isWholesale = location.pathname.startsWith("/mayorista");
-                                        const base = isWholesale ? "/mayorista" : "";
-                                        navigate(`${base}/categoria/${c.slug}`);
+                                        if (onSelectCategory) {
+                                            onSelectCategory(c.slug);
+                                        } else {
+                                            const isWholesale = location.pathname.startsWith("/mayorista");
+                                            const base = isWholesale ? "/mayorista" : "";
+                                            navigate(`${base}/categoria/${c.slug}`);
+                                        }
                                         setOpen(false);
                                     }}
                                     className={`w-full text-left px-2 py-1 rounded border transition-colors ${active
@@ -258,6 +262,7 @@ export default function SidebarFiltersNuevo({
                                 >
                                     {c.name}
                                 </button>
+
                             </li>
                         );
                     })}

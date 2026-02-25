@@ -71,10 +71,23 @@ export default function ProductCardPerfumes({ product, returnTo, isGrid = true }
 
     const handleProductClick = () => {
         // ancla para restauración exacta
+        // ancla + página exacta para restauración sólida
         sessionStorage.setItem("lastProductId", String(product.id));
+
+        const pageFromReturnTo = (() => {
+            if (!returnTo) return null;
+            const qs = returnTo.split("?")[1] || "";
+            const p = Number(new URLSearchParams(qs).get("page"));
+            return Number.isFinite(p) && p > 0 ? p : null;
+        })();
+
+        if (pageFromReturnTo) {
+            sessionStorage.setItem("lastProductPage", String(pageFromReturnTo));
+        }
 
         // guardo returnTo y marco si viene del grid según el prop `isGrid`
         const state = returnTo ? { fromGrid: Boolean(isGrid), returnTo } : undefined;
+
 
         navigate(`${prefix}/product/${product.id}`, { state });
     };

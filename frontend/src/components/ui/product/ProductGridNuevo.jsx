@@ -155,8 +155,16 @@ export default function ProductGridNuevo({ category, hideFilters = false }) {
             setSelectedFlavors(saved.selectedFlavors ?? []);
 
             setItemsPerPage(saved.itemsPerPage ?? 12);
-            setCurrentPage(saved.currentPage ?? 1);
+
+            const forcedPage = Number(sessionStorage.getItem("lastProductPage"));
+            if (Number.isFinite(forcedPage) && forcedPage > 0) {
+                setCurrentPage(forcedPage);
+            } else {
+                setCurrentPage(saved.currentPage ?? 1);
+            }
+
             setSortOrder(saved.sortOrder ?? "default");
+
 
             restoredRef.current = true;
             skipNextPageResetRef.current = true;
@@ -472,11 +480,30 @@ export default function ProductGridNuevo({ category, hideFilters = false }) {
     // Sidebar: navegar a categoría (mantengo tu lógica exacta)
     // -----------------------------
     const handleSelectCategory = (newSlug) => {
-        const prevKey = `productGridState:${currentSlug || "all"}`;
-        const saved = JSON.parse(sessionStorage.getItem(prevKey) || "{}");
-        sessionStorage.setItem(prevKey, JSON.stringify({ ...saved, scrollY: 0 }));
+        if (!newSlug) return;
+
+        // cambio explícito de categoría: no mezclar con restauración desde detalle
+        sessionStorage.removeItem("lastProductId");
+
+        // estado limpio al cambiar categoría
+        setSearchTerm("");
+        setSelectedBrands([]);
+        setSelectedPuffs([]);
+        setSelectedFlavors([]);
+        setSortOrder("default");
+        setPriceRange({ min: 0, max: Infinity });
+        setCurrentPage(1);
+
+        skipNextPageResetRef.current = true;
+        gridRestoredRef.current = false;
+
+        const isWholesale = location.pathname.startsWith("/mayorista");
+        const base = isWholesale ? "/mayorista" : "";
+
         window.scrollTo({ top: 0, behavior: "instant" });
+        navigate(`${base}/categoria/${newSlug}`);
     };
+
 
     useLayoutEffect(() => {
         if (gridRestoredRef.current) return;
@@ -492,16 +519,27 @@ export default function ProductGridNuevo({ category, hideFilters = false }) {
         }
 
         // Esperamos a tener el listado completo para saber en qué página está.
+        // Esperamos a tener el listado completo para saber en qué página está.
         if (sortedProducts.length === 0) return;
+
+        // si tenemos página guardada, primero forzamos esa página
+        const forcedPage = Number(sessionStorage.getItem("lastProductPage"));
+        if (Number.isFinite(forcedPage) && forcedPage > 0 && forcedPage !== currentPage) {
+            setCurrentPage(forcedPage);
+            return;
+        }
 
         const targetIndex = sortedProducts.findIndex(
             (p) => Number(p.id) === lastId
         );
 
+
         if (targetIndex === -1) {
             // Si ya no existe por filtros/categoría, limpiamos y salimos.
             sessionStorage.removeItem("lastProductId");
+            sessionStorage.removeItem("lastProductPage");
             gridRestoredRef.current = true;
+
             return;
         }
 
