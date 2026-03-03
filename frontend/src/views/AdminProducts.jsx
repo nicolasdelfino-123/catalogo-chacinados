@@ -260,6 +260,7 @@ export default function AdminProducts() {
     const [importPreview, setImportPreview] = useState([]) // array transformado listo para crear
     const [importOpen, setImportOpen] = useState(false)
     const [importing, setImporting] = useState(false)
+    const [showZeroStockModal, setShowZeroStockModal] = useState(false)
 
     const token = localStorage.getItem("token") || localStorage.getItem("admin_token")
     if (!token) return <div className="p-6">No autorizado</div>
@@ -527,8 +528,7 @@ export default function AdminProducts() {
 
     const shouldShowFlavors = () => false
 
-    const save = async (e) => {
-        e.preventDefault()
+    const doSaveProduct = async () => {
         try {
             const method = form.id ? "PUT" : "POST"
             const url = form.id ? `${API}/admin/products/${form.id}` : `${API}/admin/products`
@@ -631,6 +631,16 @@ export default function AdminProducts() {
             console.error("Error saving product:", error);
             alert("Error al guardar producto");
         }
+    };
+
+    const save = async (e) => {
+        e.preventDefault();
+        const stock = Math.max(0, Math.floor(Number(form?.stock) || 0));
+        if (stock === 0) {
+            setShowZeroStockModal(true);
+            return;
+        }
+        await doSaveProduct();
     };
 
     const filtered = products.filter((p) => {
@@ -1005,6 +1015,7 @@ export default function AdminProducts() {
                                             setForm({
                                                 ...p,
                                                 category_id: Number(p.category_id) === 6 ? 1 : p.category_id,
+                                                price: Number(p.price) > 0 ? String(p.price) : "",
                                                 price_wholesale: p.price_wholesale ?? "", // ✅ NUEVO: trae mayorista al form
                                                 volume_ml: p.volume_ml ?? "",
                                                 volume_options: normalizeVolumeOptions(p.volume_options || []),
@@ -1155,9 +1166,8 @@ export default function AdminProducts() {
                                     step="0.01"
                                     inputMode="decimal"
                                     {...noSpin}
-                                    value={form.price ?? ""}
+                                    value={Number(form.price) === 0 ? "" : (form.price ?? "")}
                                     onChange={(e) => setForm({ ...form, price: e.target.value })}
-                                    required
                                 />
                             </div>
 
@@ -1195,15 +1205,18 @@ export default function AdminProducts() {
                                                 type="button"
                                                 className="px-2 py-1 border rounded hover:bg-gray-50"
                                                 title="Editar"
+
                                                 onClick={() =>
                                                     setForm((prev) => ({
                                                         ...prev,
                                                         volume_ml: row.ml,
-                                                        price: row.price,
-                                                        price_wholesale: row.price_wholesale ?? "",
+                                                        price: Number(row?.price) > 0 ? String(row.price) : "",
+                                                        price_wholesale:
+                                                            Number(row?.price_wholesale) > 0 ? String(row.price_wholesale) : "",
                                                         volume_options: (prev.volume_options || []).filter((_, i) => i !== idx),
                                                     }))
                                                 }
+
                                             >
                                                 ✏️
                                             </button>
@@ -1489,6 +1502,35 @@ export default function AdminProducts() {
                                 Guardar
                             </button>
                         </div>
+
+                        {showZeroStockModal && (
+                            <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]">
+                                <div className="bg-white rounded-lg p-5 w-full max-w-md space-y-4">
+                                    <p className="text-sm text-gray-800 whitespace-pre-line">
+                                        {"⚠ Este producto se guardará sin stock disponible.\n¿Querés continuar?"}
+                                    </p>
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowZeroStockModal(false)}
+                                            className="px-3 py-2 border rounded"
+                                        >
+                                            Volver a editar
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                setShowZeroStockModal(false);
+                                                await doSaveProduct();
+                                            }}
+                                            className="px-3 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+                                        >
+                                            Confirmar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </form>
             )}

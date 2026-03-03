@@ -111,7 +111,10 @@ const Footer = () => {
                     <div className="border-t border-yellow-600/20 mt-8 pt-8 text-center text-gray-400 text-sm">
                         <p>
                             Copyright © <span
-                                onDoubleClick={() => navigate("/admin/login")}
+                                onDoubleClick={() => {
+                                    navigate("/admin/login");
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}
                                 className="cursor-default select-none"
                             >
                                 2025

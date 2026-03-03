@@ -37,19 +37,31 @@ const getFlavors = (product) => {
     return extractFlavorsFromDescription(product.description || "");
 };
 
-const NAME_TO_SLUG = {
-    "Perfumes masculinos": "perfumes-masculinos",
-    "Femeninos": "femeninos",
-    "Unisex": "unisex",
-    "Cremas": "cremas",
-    "Body splash victoria secret": "body-splash-victoria-secret",
-    // compatibilidad nombres viejos
-    "Vapes Desechables": "perfumes-masculinos",
-    "Pods Recargables": "femeninos",
-    "Líquidos": "unisex",
-    "Resistencias": "cremas",
-    "Celulares": "body-splash-victoria-secret",
-    "Perfumes": "perfumes-masculinos",
+const CATEGORY_ID_TO_NAME = {
+    1: "Perfumes masculinos",
+    2: "Femeninos",
+    3: "Unisex",
+    4: "Cremas",
+    5: "Body splash victoria secret",
+    // compatibilidad de productos viejos
+    6: "Perfumes masculinos",
+};
+
+const LEGACY_CATEGORY_NAME_TO_CURRENT = {
+    "Vapes Desechables": "Perfumes masculinos",
+    "Pods Recargables": "Femeninos",
+    "Líquidos": "Unisex",
+    "Resistencias": "Cremas",
+    "Celulares": "Body splash victoria secret",
+    "Perfumes": "Perfumes masculinos",
+};
+
+const getDisplayCategoryName = (product) => {
+    const byId = CATEGORY_ID_TO_NAME[Number(product?.category_id)];
+    if (byId) return byId;
+    const raw = String(product?.category_name || "").trim();
+    if (!raw) return "";
+    return LEGACY_CATEGORY_NAME_TO_CURRENT[raw] || raw;
 };
 
 const API = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "";
@@ -204,6 +216,7 @@ export default function ProductDetailNuevo() {
         sizeOptions.find((opt) => String(opt.ml) === String(selectedSizeMl)) ||
         sizeOptions[0] ||
         null;
+    const displayCategoryName = getDisplayCategoryName(product);
 
     const retailPrice = Number(selectedSize?.price ?? product?.price);
     const wholesalePrice = Number(selectedSize?.price_wholesale ?? product?.price_wholesale);
@@ -413,7 +426,7 @@ export default function ProductDetailNuevo() {
                             </div>
                         )}
                         <div className="mb-6">
-                            <p className="text-sm text-gray-500">Categoría: {product.category_name}</p>
+                            <p className="text-sm text-gray-500">Categoría: {displayCategoryName || "Sin categoría"}</p>
                         </div>
                         {product.description && (
                             <p className="text-gray-700 mb-4 leading-relaxed">
