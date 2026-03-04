@@ -117,7 +117,7 @@ const Footer = () => {
                                 }}
                                 className="cursor-default select-none"
                             >
-                                2025
+                                2026
                             </span> | Sitio xxxxx — Sitio web desarrollado por{" "}
                             <a
                                 href="https://wa.me/5493534793366?text=Hola%2C%20vi%20tu%20web%20y%20quiero%20consultarte%20por%20una%20página"

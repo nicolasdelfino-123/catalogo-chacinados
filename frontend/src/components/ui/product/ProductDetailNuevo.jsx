@@ -82,6 +82,34 @@ const toAbsUrl = (u = "") => {
     return `${API}/${u}`;
 };
 
+const sanitizeRichHtml = (html = "") => {
+    const source = String(html || "");
+    if (!source.trim()) return "";
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(source, "text/html");
+    const allowed = new Set(["STRONG", "EM", "B", "I", "U", "BR", "P", "DIV", "UL", "OL", "LI"]);
+
+    const walk = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) return node.textContent || "";
+        if (node.nodeType !== Node.ELEMENT_NODE) return "";
+        const tag = node.tagName.toUpperCase();
+        const children = Array.from(node.childNodes).map(walk).join("");
+        if (tag === "BR") return "<br>";
+        if (!allowed.has(tag)) return children;
+        if (tag === "B") return `<strong>${children}</strong>`;
+        if (tag === "I") return `<em>${children}</em>`;
+        return `<${tag.toLowerCase()}>${children}</${tag.toLowerCase()}>`;
+    };
+
+    return Array.from(parsed.body.childNodes).map(walk).join("");
+};
+
+const plainTextFromRich = (html = "") =>
+    String(html || "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
 const parseMl = (value) => {
     if (value === null || value === undefined) return null;
     if (typeof value === "number" && Number.isFinite(value)) return Math.floor(value);
@@ -426,9 +454,10 @@ export default function ProductDetailNuevo() {
                             <p className="text-xs font-serif text-stone-500 tracking-wide">Categoría: {displayCategoryName || "Sin categoría"}</p>
                         </div>
                         {product.description && (
-                            <p className="font-serif text-stone-700 mb-4 leading-relaxed">
-                                {product.description}
-                            </p>
+                            <div
+                                className="font-serif text-stone-700 mb-4 leading-relaxed whitespace-pre-wrap"
+                                dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(product.description) }}
+                            />
                         )}
 
                         {/* selector sabores */}
@@ -494,30 +523,30 @@ export default function ProductDetailNuevo() {
                             >
                                 Descripción
                             </button>
-                            <button
+                            {/*  <button
                                 onClick={() => setActiveTab("info")}
                                 className={activeTab === "desc"
                                     ? "font-serif font-semibold border-b-2 border-black pb-2 text-[#232325]"
                                     : "font-serif pb-2 text-stone-500 hover:text-[#d4af37] transition-colors"}
                             >
                                 Información adicional
-                            </button>
+                            </button> */}
                         </div>
 
                         {activeTab === 'desc' ? (
                             <div className="pt-4">
                                 <div className="relative">
-                                    <p
+                                    <div
                                         className={`font-serif text-stone-700 whitespace-pre-line leading-relaxed`}
                                         style={
                                             descExpanded
                                                 ? { maxHeight: 'none', overflow: 'visible', display: 'block' }
                                                 : { maxHeight: '12em', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical' }
                                         }
+                                        dangerouslySetInnerHTML={{ __html: sanitizeRichHtml(product.short_description || "Sin descripción.") }}
                                     >
-                                        {product.short_description || 'Sin descripción.'}
-                                    </p>
-                                    {(product.short_description?.length ?? 0) > 0 && (
+                                    </div>
+                                    {(plainTextFromRich(product.short_description).length ?? 0) > 0 && (
                                         <button
                                             type="button"
                                             onClick={() => setDescExpanded((v) => !v)}

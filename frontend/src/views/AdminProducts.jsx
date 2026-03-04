@@ -18,7 +18,125 @@ const ID_TO_CATEGORY_NAME = Object.fromEntries(
     Object.entries(CATEGORY_NAME_TO_ID).map(([k, v]) => [v, k])
 );
 // compatibilidad para productos viejos en categoría 6
-ID_TO_CATEGORY_NAME[6] = "Perfumes masculinos";
+ID_TO_CATEGORY_NAME[6] = "Perfumes Masculinos";
+
+const normalizeCategoryLabel = (value = "") =>
+    String(value || "")
+        .trim()
+        .toLowerCase();
+
+const stripHtml = (value = "") =>
+    String(value || "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+const sanitizeRichHtml = (html = "") => {
+    const source = String(html || "");
+    if (!source.trim()) return "";
+
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(source, "text/html");
+    const allowed = new Set(["STRONG", "EM", "B", "I", "U", "BR", "P", "DIV", "UL", "OL", "LI"]);
+
+    const walk = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return node.textContent || "";
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return "";
+        }
+
+        const tag = node.tagName.toUpperCase();
+        const children = Array.from(node.childNodes).map(walk).join("");
+
+        if (tag === "BR") return "<br>";
+
+        if (!allowed.has(tag)) {
+            const style = String(node.getAttribute("style") || "").toLowerCase();
+            const isBold = /font-weight\s*:\s*(bold|[5-9]00)/.test(style);
+            if (isBold && children.trim()) return `<strong>${children}</strong>`;
+            return children;
+        }
+
+        if (tag === "B") return `<strong>${children}</strong>`;
+        if (tag === "I") return `<em>${children}</em>`;
+        return `<${tag.toLowerCase()}>${children}</${tag.toLowerCase()}>`;
+    };
+
+    return Array.from(parsed.body.childNodes).map(walk).join("");
+};
+
+function RichTextInput({ value = "", onChange, placeholder = "", minHeight = "120px" }) {
+    const editorRef = useRef(null);
+
+    useEffect(() => {
+        const next = sanitizeRichHtml(value);
+        if (!editorRef.current) return;
+        if (editorRef.current.innerHTML !== next) {
+            editorRef.current.innerHTML = next;
+        }
+    }, [value]);
+
+    const emitChange = () => {
+        if (!editorRef.current) return;
+        onChange(sanitizeRichHtml(editorRef.current.innerHTML));
+    };
+
+    const insertHtmlAtCursor = (html) => {
+        if (!html) return;
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            editorRef.current?.focus();
+            document.execCommand("insertHTML", false, html);
+            return;
+        }
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+        const frag = document.createDocumentFragment();
+        let lastNode = null;
+        while (temp.firstChild) {
+            lastNode = frag.appendChild(temp.firstChild);
+        }
+        range.insertNode(frag);
+        if (lastNode) {
+            const nextRange = document.createRange();
+            nextRange.setStartAfter(lastNode);
+            nextRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(nextRange);
+        }
+    };
+
+    return (
+        <div className="relative">
+            <div
+                ref={editorRef}
+                contentEditable
+                suppressContentEditableWarning
+                className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 whitespace-pre-wrap"
+                style={{ minHeight }}
+                onInput={emitChange}
+                onBlur={emitChange}
+                onPaste={(e) => {
+                    e.preventDefault();
+                    const html = e.clipboardData?.getData("text/html") || "";
+                    const text = e.clipboardData?.getData("text/plain") || "";
+                    const toInsert = sanitizeRichHtml(html || text.replace(/\n/g, "<br>"));
+                    insertHtmlAtCursor(toInsert);
+                    emitChange();
+                }}
+            />
+            {!stripHtml(value) && (
+                <div className="pointer-events-none absolute left-3 top-2 text-gray-400 text-sm">
+                    {placeholder}
+                </div>
+            )}
+        </div>
+    );
+}
 
 function mapCategoryId(name) {
     const n = (name || "").toLowerCase()
@@ -267,7 +385,7 @@ const clearPricingInputs = (state) => ({
 // ----- Componente principal -----
 export default function AdminProducts() {
     const [products, setProducts] = useState([])
-    const [categories] = useState(["Perfumes masculinos", "Femeninos", "Unisex", "Cremas", "Body splash victoria secret"])
+    const [categories] = useState(["Perfumes Masculinos", "Femeninos", "Unisex", "Cremas", "Body Splash Victoria Secret"])
     const [form, setForm] = useState(null)
     const [q, setQ] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("Todos")
@@ -721,7 +839,7 @@ export default function AdminProducts() {
 
         const matchesCategory =
             selectedCategory === "Todos" ||
-            ID_TO_CATEGORY_NAME[p.category_id] === selectedCategory; // 👈
+            normalizeCategoryLabel(ID_TO_CATEGORY_NAME[p.category_id]) === normalizeCategoryLabel(selectedCategory); // 👈
 
         return matchesSearch && matchesCategory;
     });
@@ -837,7 +955,7 @@ export default function AdminProducts() {
                                         stock: it.stock || 0,
                                         image_url: it.image_url || "",
                                         category_id: catId,
-                                        category_name: ID_TO_CATEGORY_NAME[catId] || "Perfumes masculinos",
+                                        category_name: ID_TO_CATEGORY_NAME[catId] || "Perfumes Masculinos",
                                         flavor_enabled: catalog.length > 0,
                                         flavor_catalog: catalog, // ✅ catálogo completo para edición
                                         flavors: catalog.map((x) => x.name), // ✅ todos los sabores como activos por defecto
@@ -890,13 +1008,13 @@ export default function AdminProducts() {
                                     </div>
                                 </td>
                                 <td className="p-2 max-w-xs">
-                                    <div className="truncate" title={p.description}>
-                                        {p.description || "Sin descripción"}
+                                    <div className="truncate" title={stripHtml(p.description)}>
+                                        {stripHtml(p.description) || "Sin descripción"}
                                     </div>
                                 </td>
                                 <td className="p-2 max-w-xs">
-                                    <div className="truncate" title={p.short_description}>
-                                        {p.short_description || "Sin descripción breve"}
+                                    <div className="truncate" title={stripHtml(p.short_description)}>
+                                        {stripHtml(p.short_description) || "Sin descripción breve"}
                                     </div>
                                 </td>
                                 <td className="p-2">
@@ -1137,21 +1255,19 @@ export default function AdminProducts() {
                         />
 
                         <label className="block text-sm font-medium text-gray-700 mb-1">Descripción larga</label>
-                        <textarea
-                            className="w-full border rounded px-3 py-2"
-                            placeholder="(descripción detallada del producto)"
-                            rows={2}
-                            maxLength={40000}
+                        <RichTextInput
                             value={form.short_description || ""}
-                            onChange={(e) => setForm({ ...form, short_description: e.target.value })}
+                            placeholder="(descripción detallada del producto)"
+                            onChange={(next) => setForm({ ...form, short_description: next })}
+                            minHeight="120px"
                         />
 
                         <label className="block text-sm font-medium text-gray-700 mb-1">Descripción corta</label>
-                        <textarea
-                            className="w-full border rounded px-3 py-2"
-                            placeholder="Descripción breve (se muestra debajo del precio)"
+                        <RichTextInput
                             value={form.description || ""}
-                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                            placeholder="Descripción breve (se muestra debajo del precio)"
+                            onChange={(next) => setForm({ ...form, description: next })}
+                            minHeight="90px"
                         />
 
                         <label className="block text-sm font-medium text-gray-700 mb-1">Marca</label>
@@ -1191,7 +1307,7 @@ export default function AdminProducts() {
                             </div>
                             <button
                                 type="button"
-                                className="h-10 px-3 border rounded hover:bg-gray-50"
+                                className="h-10 px-3 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
                                 onClick={() => {
                                     const ml = Number(form.volume_ml);
                                     const price = Number(form.price);
@@ -1233,34 +1349,62 @@ export default function AdminProducts() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Precio minorista
                                 </label>
-                                <input
-                                    className="w-full border rounded px-3 py-2"
-                                    placeholder="Precio minorista"
-                                    type="number"
-                                    step="0.01"
-                                    inputMode="decimal"
-                                    {...noSpin}
-                                    value={Number(form.price) === 0 ? "" : (form.price ?? "")}
-                                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                                />
+
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        $
+                                    </span>
+
+                                    <input
+                                        className="w-full border rounded pl-7 pr-3 py-2"
+                                        placeholder="Precio minorista"
+                                        type="text"
+                                        inputMode="numeric"
+                                        {...noSpin}
+                                        value={
+                                            form.price
+                                                ? Number(form.price).toLocaleString("es-AR")
+                                                : ""
+                                        }
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                price: e.target.value.replace(/\D/g, "")
+                                            })
+                                        }
+                                    />
+                                </div>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Precio mayorista
                                 </label>
-                                <input
-                                    className="w-full border rounded px-3 py-2"
-                                    placeholder="Opcional"
-                                    type="number"
-                                    step="0.01"
-                                    inputMode="decimal"
-                                    {...noSpin}
-                                    value={form.price_wholesale ?? ""}
-                                    onChange={(e) =>
-                                        setForm({ ...form, price_wholesale: e.target.value })
-                                    }
-                                />
+
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        US$
+                                    </span>
+
+                                    <input
+                                        className="w-full border rounded pl-10 pr-3 py-2"
+                                        placeholder="Opcional"
+                                        type="text"
+                                        inputMode="numeric"
+                                        {...noSpin}
+                                        value={
+                                            form.price_wholesale
+                                                ? Number(form.price_wholesale).toLocaleString("es-AR")
+                                                : ""
+                                        }
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                price_wholesale: e.target.value.replace(/\D/g, "")
+                                            })
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -1542,7 +1686,7 @@ export default function AdminProducts() {
                                 setForm({
                                     ...form,
                                     category_id: categoryId,
-                                    category_name: ID_TO_CATEGORY_NAME[categoryId] || "Perfumes masculinos",
+                                    category_name: ID_TO_CATEGORY_NAME[categoryId] || "Perfumes Masculinos",
                                     flavor_enabled: show,
                                     flavors: show ? form.flavors || [] : [],
                                 })
@@ -1550,7 +1694,7 @@ export default function AdminProducts() {
                             required
                         >
                             <option value="">Selecciona categoría</option>
-                            <option value={1}>Perfumes masculinos</option>
+                            <option value={1}>Perfumes Masculinos</option>
                             <option value={2}>Femeninos</option>
                             <option value={3}>Unisex</option>
                             <option value={4}>Cremas</option>
