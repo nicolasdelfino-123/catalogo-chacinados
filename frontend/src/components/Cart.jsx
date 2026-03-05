@@ -67,11 +67,14 @@ export default function Cart({ isOpen: controlledOpen, onClose: controlledOnClos
 
   // devuelve precio correcto según modo
   const getItemPrice = (item) => {
+    const wholesalePrice = Number(item.price_wholesale);
+    const retailPrice = Number(item.price);
+
     if (isWholesale) {
-      if (Number(item.price_wholesale) > 0) return Number(item.price_wholesale);
+      if (wholesalePrice > 0) return wholesalePrice;
       return null; // mayorista sin precio → consultar
     }
-    return Number(item.price) || 0;
+    return retailPrice > 0 ? retailPrice : null; // minorista sin precio o 0 → consultar
   };
 
 
@@ -112,9 +115,9 @@ export default function Cart({ isOpen: controlledOpen, onClose: controlledOnClos
 
       const price = isWholesale
         ? (wholesalePrice > 0 ? wholesalePrice : null)
-        : retailPrice;
+        : (retailPrice > 0 ? retailPrice : null);
 
-      message += `• ${qty} x ${name}${flavor}${size}\n`;
+      message += `• *${qty} x ${(name + flavor + size).trim()}*\n`;
 
       if (price !== null) {
         const subtotal = price * qty;
@@ -129,13 +132,15 @@ export default function Cart({ isOpen: controlledOpen, onClose: controlledOnClos
     });
 
     if (hasUnknownPrice) {
-      message += "TOTAL: Consultar\n\n";
+      message += "*TOTAL:* Consultar\n\n";
     } else {
-      message += `TOTAL: $${total.toLocaleString("es-AR")}\n\n`;
+      message += `*TOTAL:* $${total.toLocaleString("es-AR")}\n\n`;
     }
 
     // 🚚 info de envío (PRO y simple)
     message += "🚚 Envío: a coordinar con el vendedor\n\n";
+
+    message += "_Los precios y la disponibilidad serán confirmados por el vendedor al responder el pedido._\n\n";
 
     message += "Gracias!";
 
