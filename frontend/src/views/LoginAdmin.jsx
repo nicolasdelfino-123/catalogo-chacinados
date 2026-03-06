@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { Context } from "../js/store/appContext"
 
 export default function LoginAdmin() {
-    const [email, setEmail] = useState("admin@vapestore.com")
-    const [password, setPassword] = useState("admin123")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const { actions } = useContext(Context)

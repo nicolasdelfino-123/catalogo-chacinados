@@ -5,6 +5,8 @@ import os
 from flask import send_from_directory, current_app
 from app.models import ProductImage
 import hashlib
+import json
+from sqlalchemy.orm.attributes import flag_modified
 
 import smtplib
 import os
@@ -194,16 +196,36 @@ def create_order():
                 selected_size_ml = int(raw_size_ml) if raw_size_ml not in (None, "") else None
             except (TypeError, ValueError):
                 selected_size_ml = None
+            qty = int(item.get("quantity", 1) or 1)
 
             order_item = OrderItem(
                 order_id=order.id,
                 product_id=item.get("product_id"),
-                quantity=item.get("quantity", 1),
+                quantity=qty,
                 price=item.get("price", 0),
                 selected_flavor=item.get("selected_flavor"),
                 selected_size_ml=selected_size_ml
             )
             db.session.add(order_item)
+
+            # ✅ Descontar stock real para que AdminProducts quede consistente
+            product = Product.query.get(item.get("product_id"))
+            if product:
+                product.stock = max(0, int(product.stock or 0) - qty)
+
+                if selected_size_ml is not None and product.volume_options:
+                    options = json.loads(json.dumps(product.volume_options or []))
+                    for row in options:
+                        try:
+                            row_ml = int(row.get("ml")) if row.get("ml") not in (None, "") else None
+                        except (TypeError, ValueError):
+                            row_ml = None
+                        if row_ml == selected_size_ml:
+                            row["stock"] = max(0, int(row.get("stock") or 0) - qty)
+                            break
+                    product.volume_options = options
+                    flag_modified(product, "volume_options")
+                    product.stock = sum(max(0, int(x.get("stock") or 0)) for x in options)
 
         db.session.commit()
 
