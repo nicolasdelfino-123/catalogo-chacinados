@@ -1,13 +1,12 @@
-// src/pages/Envios.jsx
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
-const CATEGORIES = [
-    { id: 1, name: "Pods Descartables", slug: "vapes-desechables" },
-    { id: 2, name: "Pods Recargables", slug: "pods-recargables" },
-    { id: 3, name: "Líquidos", slug: "liquidos" },
-    { id: 4, name: "Resistencias", slug: "resistencias" },
-    { id: 6, name: "Perfumes", slug: "perfumes" },
+const FOOTER_CATEGORIES = [
+    { label: "Perfumes Masculinos", slug: "perfumes-masculinos" },
+    { label: "Femeninos", slug: "femeninos" },
+    { label: "Unisex", slug: "unisex" },
+    { label: "Cremas", slug: "cremas" },
+    { label: "Body Splash Victoria Secret", slug: "body-splash-victoria-secret" },
 ];
 
 export default function Envios() {
@@ -17,78 +16,165 @@ export default function Envios() {
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-10">
+        <div className="max-w-7xl mx-auto px-4 py-14 grid md:grid-cols-3 gap-12">
+
             {/* CONTENIDO PRINCIPAL */}
             <div className="md:col-span-2">
-                <h1 className="text-3xl font-bold mb-6 text-gray-800">
+
+                <h1 className="text-3xl md:text-4xl font-serif font-semibold tracking-wide text-gray-900 mb-10 border-b pb-4">
                     Política de envíos
                 </h1>
 
-                <div className="prose prose-gray max-w-none text-gray-700 leading-relaxed space-y-5">
-                    <p>
-                        En <strong>Zarpados</strong> realizamos envíos a todo el país
-                        a través de <strong>Correo</strong>, garantizando rapidez y
-                        seguridad en cada entrega. El tiempo estimado de despacho es de{" "}
-                        <strong>2 a 5 días hábiles</strong>, dependiendo de la ubicación del
-                        destino.
-                    </p>
+                <div className="space-y-5 text-gray-700 leading-relaxed font-serif tracking-wide text-base md:text-[16px]">
 
                     <p>
-                        También ofrecemos la opción de{" "}
-                        <strong>retiro en nuestro local</strong>. Una vez confirmada tu
-                        compra, podrás retirar tu pedido únicamente dentro de los días y
-                        horarios de atención publicados.
+                        En <strong>Shatha Perfumes</strong> trabajamos para que cada pedido
+                        llegue a destino de forma segura y en el menor tiempo posible.
+                        Todos los envíos se preparan cuidadosamente para proteger los
+                        productos durante el traslado.
                     </p>
 
-                    <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-lg">
-                        <p className="text-gray-700">
-                            <strong>📦 Importante:</strong>
+                    <hr className="border-gray-200" />
+
+                    <section>
+                        <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-2">
+                            1. Modalidad de envío
+                        </h2>
+
+                        <p>
+                            Realizamos envíos a través de servicios de correo y logística
+                            disponibles en Argentina. Una vez confirmado el pedido y el
+                            pago correspondiente, el paquete será preparado y despachado
+                            dentro de los plazos habituales de procesamiento.
                         </p>
-                        <ul className="list-disc list-inside mt-2 space-y-2 text-gray-700">
-                            <li>
-                                Una vez despachado el paquete, la responsabilidad pasa a manos
-                                del correo. No nos hacemos responsables por demoras o daños
-                                ocurridos durante el traslado.
-                            </li>
-                            <li>
-                                Es fundamental realizar el seguimiento del envío utilizando el{" "}
-                                <strong>número de tracking</strong> que recibirás por correo
-                                electrónico una vez despachada la orden.
-                            </li>
-                            <li>
-                                En caso de extravío o inconveniente con el envío, podrás
-                                comunicarte directamente con el servicio de atención del
-                                <strong> Correo</strong> para gestionar el reclamo.
-                            </li>
-                        </ul>
-                    </div>
 
-                    <p className="text-sm text-gray-500 italic">
-                        Nos comprometemos a despachar tu pedido en el menor tiempo posible,
-                        cuidando cada detalle para que tu experiencia sea confiable y
-                        segura.
+                        <p>
+                            Cada pedido es embalado cuidadosamente para garantizar que
+                            los perfumes y productos de perfumería lleguen en óptimas
+                            condiciones.
+                        </p>
+                    </section>
+
+                    <hr className="border-gray-200" />
+
+                    <section>
+                        <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-2">
+                            2. Tiempos de despacho
+                        </h2>
+
+                        <p>
+                            Los pedidos suelen despacharse dentro de un plazo estimado
+                            de <strong>24 a 72 horas hábiles</strong> una vez confirmada
+                            la compra.
+                        </p>
+
+                        <p>
+                            El tiempo total de entrega dependerá del servicio de correo
+                            y de la ubicación del destino.
+                        </p>
+                    </section>
+
+                    <hr className="border-gray-200" />
+
+                    <section>
+                        <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-2">
+                            3. Tiempos de entrega estimados
+                        </h2>
+
+                        <p>
+                            Una vez despachado el pedido, los tiempos de entrega
+                            estimados suelen ser:
+                        </p>
+
+                        <ul className="list-disc pl-5 space-y-1">
+                            <li>Entre <strong>2 y 5 días hábiles</strong> para ciudades principales.</li>
+                            <li>Entre <strong>3 y 7 días hábiles</strong> para otras localidades del país.</li>
+                        </ul>
+
+                        <p>
+                            Estos tiempos pueden variar según el operador logístico
+                            y la distancia del destino.
+                        </p>
+                    </section>
+
+                    <hr className="border-gray-200" />
+
+                    <section>
+                        <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-2">
+                            4. Seguimiento del envío
+                        </h2>
+
+                        <p>
+                            Una vez despachado el pedido, el cliente recibirá la información de seguimiento
+                            correspondiente para rastrear el envío y conocer su estado hasta la entrega.
+                        </p>
+
+                        <p>
+                            A través del número de seguimiento será posible consultar el progreso del
+                            paquete y la fecha estimada de llegada proporcionada por el servicio de correo.
+                        </p>
+                    </section>
+
+                    <hr className="border-gray-200" />
+
+                    <section>
+                        <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-2">
+                            5. Responsabilidad del transporte
+                        </h2>
+
+                        <p>
+                            Una vez que el paquete es entregado al servicio de correo,
+                            el transporte queda bajo responsabilidad del operador
+                            logístico. Cualquier demora ocasionada durante el traslado
+                            dependerá del servicio de envío correspondiente.
+                        </p>
+
+                        <p>
+                            Ante cualquier consulta o inconveniente relacionado con
+                            el envío, nuestro equipo de atención al cliente estará
+                            disponible para brindar asistencia.
+                        </p>
+
+                        <p className="font-medium">
+                            contacto: <strong>xxxx@xxxx.com</strong>
+                        </p>
+                    </section>
+
+                    <p className="text-sm text-gray-500 italic pt-6">
+                        Última actualización:{" "}
+                        {new Date().toLocaleDateString("es-AR", {
+                            year: "numeric",
+                            month: "long"
+                        })}
                     </p>
+
                 </div>
             </div>
 
-            {/* CATEGORÍAS LATERALES */}
-            <aside className="bg-white border rounded-lg p-5 shadow-sm h-fit">
-                <h2 className="text-lg font-semibold mb-4 text-gray-800">
+            {/* SIDEBAR */}
+            <aside className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm h-fit">
+
+                <h2 className="text-xl font-serif font-semibold tracking-wide text-gray-900 mb-5 border-b pb-3">
                     Categorías
                 </h2>
-                <ul className="space-y-3">
-                    {CATEGORIES.map((cat) => (
-                        <li key={cat.id}>
+
+                <ul className="divide-y divide-gray-100">
+
+                    {FOOTER_CATEGORIES.map((cat) => (
+                        <li key={cat.slug}>
                             <Link
                                 to={`/categoria/${cat.slug}`}
-                                className="block px-3 py-2 rounded-md hover:bg-purple-50 hover:text-purple-700 transition-colors text-gray-700"
+                                className="block py-3 text-gray-700 font-serif hover:text-black transition-colors"
                             >
-                                {cat.name}
+                                {cat.label}
                             </Link>
                         </li>
                     ))}
+
                 </ul>
+
             </aside>
+
         </div>
     );
 }
