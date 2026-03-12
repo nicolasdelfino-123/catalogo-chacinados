@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logofooter from "../assets/logofooter.png";
 
-const phone = "5493533497041";
+const phone = "5493533459552";
 const message = encodeURIComponent(`Hola, tengo una consulta sobre el producto...`);
 const link = `https://wa.me/${phone}?text=${message}`;
 
@@ -89,12 +89,12 @@ const Footer = () => {
                                         rel="noopener noreferrer"
                                         className="relative hover:text-amber-300 transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full"
                                     >
-                                        WhatsApp: +54 9 3533 xx-xxxx
+                                        WhatsApp: +54 9 3533 45-9552
                                     </a>
                                 </li>
                                 <li>
                                     <a
-                                        href="mailto:zarpado.vap@gmail.com"
+                                        href="mailto:xxx@gmail.com"
                                         className="relative hover:text-amber-300 transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full"
                                     >
                                         Email: email@gmail.com
@@ -102,12 +102,12 @@ const Footer = () => {
                                 </li>
                                 <li>
                                     <a
-                                        href="https://www.instagram.com/xxxx/"
+                                        href="https://www.instagram.com/shatha_oriental/"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="relative hover:text-amber-300 transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full"
                                     >
-                                        Instagram: @xxxxx
+                                        Instagram: @shatha_oriental
                                     </a>
                                 </li>
                             </ul>

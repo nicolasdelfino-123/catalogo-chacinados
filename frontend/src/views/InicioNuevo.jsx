@@ -20,8 +20,8 @@ export default function InicioNuevo() {
 
     const ADDRESS = "Vélez Sarsfield 303, Las Varillas, Córdoba";
     const HOURS = "Lunes a Sábado 8:00–12:00 / 17:00–20:15";
-    const IG_URL = "https://www.instagram.com/zarpados.vap/";
-    const WA_URL = `https://wa.me/5493533497041?text=${encodeURIComponent(
+    const IG_URL = "https://www.instagram.com/shatha_oriental/";
+    const WA_URL = `https://wa.me/5493533459552?text=${encodeURIComponent(
         "Hola, quiero consultar por un perfume del catálogo"
     )}`;
 

@@ -741,8 +741,8 @@ export default function ProductGridNuevo({ category, hideFilters = false }) {
                                                 key={i}
                                                 onClick={() => handlePageChange(pageNum)}
                                                 className={`min-w-[40px] h-10 rounded-lg font-serif text-sm transition-all ${currentPage === pageNum
-                                                        ? "bg-[#232325] text-white shadow-md scale-105"
-                                                        : "bg-white border border-stone-300 text-stone-700 hover:border-black hover:text-black"
+                                                    ? "bg-[#232325] text-white shadow-md scale-105"
+                                                    : "bg-white border border-stone-300 text-stone-700 hover:border-black hover:text-black"
                                                     }`}
                                             >
                                                 {pageNum}
