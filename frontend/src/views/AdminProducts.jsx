@@ -394,6 +394,7 @@ export default function AdminProducts() {
     const [q, setQ] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("Todos")
     const [selectedStatus, setSelectedStatus] = useState("todos")
+    const [selectedStockFilter, setSelectedStockFilter] = useState("todos")
     // antes: const imgInputRef = useRef(null);
     const mainImgInputRef = useRef(null);
     const galImgInputRef = useRef(null);
@@ -1013,8 +1014,46 @@ export default function AdminProducts() {
             (selectedStatus === "activos" && isActive) ||
             (selectedStatus === "inactivos" && !isActive);
 
-        return matchesSearch && matchesCategory && matchesStatus;
+        const productStock = Number.isFinite(Number(p?.stock)) ? Number(p.stock) : 0;
+        const matchesStock =
+            selectedStockFilter === "todos" ||
+            (selectedStockFilter === "sin_stock" && productStock === 0) ||
+            (selectedStockFilter === "stock_bajo" && productStock > 0 && productStock <= 5);
+
+        return matchesSearch && matchesCategory && matchesStatus && matchesStock;
     });
+
+    const activeFilters = [
+        q.trim()
+            ? { key: "search", label: `Busqueda: ${q.trim()}`, onClear: () => setQ("") }
+            : null,
+        selectedCategory !== "Todos"
+            ? { key: "category", label: `Categoria: ${selectedCategory}`, onClear: () => setSelectedCategory("Todos") }
+            : null,
+        selectedStatus !== "todos"
+            ? {
+                key: "status",
+                label: `Estado: ${selectedStatus === "activos" ? "Activos" : "Inactivos"}`,
+                onClear: () => setSelectedStatus("todos"),
+            }
+            : null,
+        selectedStockFilter !== "todos"
+            ? {
+                key: "stock",
+                label: `Stock: ${selectedStockFilter === "sin_stock" ? "Sin stock" : "Stock bajo"}`,
+                onClear: () => setSelectedStockFilter("todos"),
+            }
+            : null,
+    ].filter(Boolean);
+
+    const hasActiveFilters = activeFilters.length > 0;
+
+    const clearAllFilters = () => {
+        setQ("");
+        setSelectedCategory("Todos");
+        setSelectedStatus("todos");
+        setSelectedStockFilter("todos");
+    };
 
 
     // 👇 Sincroniza el stock general cuando el modo por sabor está activo
@@ -1035,33 +1074,63 @@ export default function AdminProducts() {
 
             {/* Barra superior */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
-                <input
-                    placeholder="Buscar por nombre o marca"
-                    className="flex-1 border rounded px-3 py-2"
-                    value={q}
-                    onChange={(e) => setQ(e.target.value)}
-                />
-                <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="border rounded px-3 py-2 sm:w-48"
-                >
-                    <option value="Todos">Todas las categorías</option>
-                    {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                            {cat}
-                        </option>
-                    ))}
-                </select>
-                <select
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                    className="border rounded px-3 py-2 sm:w-44"
-                >
-                    <option value="todos">Ver todos</option>
-                    <option value="activos">Ver activos</option>
-                    <option value="inactivos">Ver inactivos</option>
-                </select>
+                <div className="flex flex-col flex-1 min-w-0">
+                    <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                        Buscar
+                    </label>
+                    <input
+                        placeholder="Buscar por nombre o marca"
+                        className="w-full border rounded px-3 py-2"
+                        value={q}
+                        onChange={(e) => setQ(e.target.value)}
+                    />
+                </div>
+
+                <div className="flex flex-col min-w-0">
+                    <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                        Categorias
+                    </label>
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="border rounded px-3 py-2 sm:w-48"
+                    >
+                        <option value="Todos">Todas las categorías</option>
+                        {categories.map((cat) => (
+                            <option key={cat} value={cat}>
+                                {cat}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col min-w-0">
+                    <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                        Estado
+                    </label>
+                    <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="border rounded px-3 py-2 sm:w-44"
+                    >
+                        <option value="todos">Ver todos</option>
+                        <option value="activos">Ver activos</option>
+                        <option value="inactivos">Ver inactivos</option>
+                    </select>
+                </div>
+                <div className="flex flex-col min-w-0">
+                    <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 mb-1">
+                        Stock
+                    </label>
+                    <select
+                        value={selectedStockFilter}
+                        onChange={(e) => setSelectedStockFilter(e.target.value)}
+                        className="border rounded px-3 py-2 sm:w-44"
+                    >
+                        <option value="todos">Ver todos</option>
+                        <option value="sin_stock">Ver sin stock</option>
+                        <option value="stock_bajo">Ver stock bajo</option>
+                    </select>
+                </div>
                 <button
                     onClick={() => setForm({
                         category_id: 1,
@@ -1160,6 +1229,41 @@ export default function AdminProducts() {
                     }}
                 />
             </div>
+
+            {hasActiveFilters && (
+                <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2">
+                    <div className="text-xs font-semibold text-amber-950 bg-amber-200/80 border border-amber-300 rounded-md px-2.5 py-1 whitespace-nowrap"
+                    >
+                        Filtros activos
+                    </div>
+                    <div className="flex flex-wrap gap-2 min-w-0">
+                        {activeFilters.map((item) => (
+                            <div
+                                key={item.key}
+                                className="inline-flex items-center gap-1.5 rounded-full bg-white border border-amber-300 pl-2.5 pr-1.5 py-1 text-xs font-medium text-amber-800"
+                            >
+                                <span>{item.label}</span>
+                                <button
+                                    type="button"
+                                    onClick={item.onClear}
+                                    className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-amber-600 text-white hover:bg-amber-700 transition-colors"
+                                    aria-label={`Quitar filtro ${item.label}`}
+                                    title={`Quitar ${item.label}`}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={clearAllFilters}
+                        className="text-xs font-medium text-white bg-amber-700 hover:bg-amber-600 border border-amber-500 rounded-md px-2.5 py-1 transition-colors whitespace-nowrap"
+                    >
+                        Limpiar filtros
+                    </button>
+                </div>
+            )}
 
             {/* Tabla */}
             <div className="overflow-x-auto">
