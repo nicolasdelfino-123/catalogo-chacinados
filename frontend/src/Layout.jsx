@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, Navigate } from "react-router-dom";
 import injectContext, { Context } from "./js/store/appContext.jsx";
 import { setWholesaleMode } from "./utils/wholesaleMode.js";
 
@@ -162,12 +162,15 @@ const Layout = () => {
           <Route path="/categoria/:slug" element={<ProductGridNuevo />} />
 
           {/* Mayorista productos (NUEVO GRID) */}
-          <Route path="/mayorista/products" element={<ProductGridNuevo />} />
-          <Route path="/mayorista/categoria/:slug" element={<ProductGridNuevo key="mayorista" />} />
+          {/*     <Route path="/mayorista/products" element={<ProductGridNuevo />} /> */}
+          <Route path="/mayorista/categoria/:slug" element={<Mayorista />} />
 
           {/* 🔥 RUTA BASE MAYORISTA (CLAVE) */}
           {/* Mayorista landing */}
-          <Route path="/mayorista" element={<Mayorista />} />
+          {/*   <Route path="/mayorista" element={<Mayorista />} /> */}
+
+          <Route path="/mayorista/products" element={<Mayorista />} />
+          <Route path="/mayorista" element={<Navigate to="/mayorista/products" replace />} />
 
           {/* Mayorista inicio */}
           <Route path="/mayorista/inicio" element={<InicioNuevo />} />
