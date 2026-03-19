@@ -2,6 +2,7 @@ import { useState, useContext, useMemo, useEffect } from "react";
 import { Context } from "../../../js/store/appContext.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import sinImagen from "@/assets/sin_imagen.jpg";
+import { formatPrice } from "../../../utils/price.js";
 
 const API = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "";
 
@@ -298,7 +299,7 @@ export default function ProductCardPerfumes({ product, returnTo, isGrid = true }
                 <div className="mt-2 sm:mt-4 text-center">
                     {finalPrice !== null ? (
                         <span className="text-xl sm:text-2xl font-semibold text-black tracking-tight">
-                            {pricePrefix}{finalPrice.toLocaleString("es-AR")}
+                            {pricePrefix}{formatPrice(finalPrice)}
                         </span>
                     ) : (
                         <span className="text-xs text-stone-400 italic">

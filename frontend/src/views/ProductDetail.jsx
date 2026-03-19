@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
+import { formatPrice } from "../utils/price.js";
 import { Context } from '../js/store/appContext.jsx';
 import sinImagen from '@/assets/sin_imagen.jpg'
 
@@ -324,7 +325,7 @@ const ProductDetail = () => {
                                     product.price_wholesale > 0 ? (
                                         <>
                                             <span className="text-4xl font-bold text-purple-600">
-                                                ${Number(product.price_wholesale).toLocaleString('es-AR')}
+                                                ${formatPrice(product.price_wholesale)}
                                             </span>
                                             <div className="text-xs text-gray-500 mt-1">
                                                 Precio mayorista
@@ -337,7 +338,7 @@ const ProductDetail = () => {
                                     )
                                 ) : (
                                     <span className="text-4xl font-bold text-purple-600">
-                                        ${Number(product.price).toLocaleString('es-AR')}
+                                        ${formatPrice(product.price)}
                                     </span>
                                 )}
                             </div>

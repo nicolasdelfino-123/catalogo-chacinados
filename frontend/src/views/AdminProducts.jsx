@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import sinImagen from '@/assets/sin_imagen.jpg'
 import { Link, useNavigate } from "react-router-dom";
+import { formatPrice } from "../utils/price.js";
 
 
 
@@ -455,10 +456,7 @@ export default function AdminProducts() {
         setEditingWholesale(
             currentWholesale == null || currentWholesale === ""
                 ? ""
-                : Number(currentWholesale).toLocaleString("es-AR", {
-                    minimumFractionDigits: Number(currentWholesale) % 1 === 0 ? 0 : 2,
-                    maximumFractionDigits: 2,
-                })
+                : formatPrice(currentWholesale)
         );
 
     };
@@ -1318,7 +1316,7 @@ export default function AdminProducts() {
                                         ) : (
                                             <div className="flex items-center justify-center gap-2">
                                                 <span className="tabular-nums">
-                                                    {wholesaleShown ? `US$ ${Number(wholesaleShown).toLocaleString("es-AR")}` : "—"}
+                                                    {wholesaleShown ? `US$ ${formatPrice(wholesaleShown)}` : "—"}
                                                 </span>
                                                 <button
                                                     type="button"
@@ -1430,10 +1428,7 @@ export default function AdminProducts() {
                                                     price_wholesale:
                                                         p.price_wholesale == null || p.price_wholesale === ""
                                                             ? ""
-                                                            : Number(p.price_wholesale).toLocaleString("es-AR", {
-                                                                minimumFractionDigits: Number(p.price_wholesale) % 1 === 0 ? 0 : 2,
-                                                                maximumFractionDigits: 2,
-                                                            }),
+                                                            : formatPrice(p.price_wholesale),
                                                     // ✅ NUEVO: trae mayorista al form
                                                     volume_ml: p.volume_ml ?? "",
                                                     volume_stock: "",
@@ -1663,7 +1658,7 @@ export default function AdminProducts() {
                                         <span>
                                             {row.ml != null ? `${row.ml} ml` : "Sin ml"} · {Number(row.price) > 0 ? `$${Number(row.price).toLocaleString("es-AR")}` : "Consultar"}
                                             {Number(row.price_wholesale) > 0
-                                                ? ` · Mayorista $${Number(row.price_wholesale).toLocaleString("es-AR")}`
+                                                ? ` · Mayorista $${formatPrice(row.price_wholesale)}`
                                                 : ""}
                                             {` · Stock ${Number.isFinite(Number(row.stock)) ? Number(row.stock) : 0}`}
                                         </span>
@@ -1680,7 +1675,7 @@ export default function AdminProducts() {
                                                         volume_stock: Number.isFinite(Number(row?.stock)) ? String(row.stock) : "",
                                                         price: Number(row?.price) > 0 ? String(row.price) : "",
                                                         price_wholesale:
-                                                            Number(row?.price_wholesale) > 0 ? String(row.price_wholesale).replace(".", ",") : "",
+                                                            Number(row?.price_wholesale) > 0 ? formatPrice(row.price_wholesale) : "",
 
                                                         volume_options: (prev.volume_options || []).filter((_, i) => i !== idx),
                                                     }))

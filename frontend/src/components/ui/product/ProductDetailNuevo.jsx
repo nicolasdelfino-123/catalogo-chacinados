@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Context } from "../../../js/store/appContext.jsx";
 import sinImagen from "@/assets/sin_imagen.jpg";
+import { formatPrice } from "../../../utils/price.js";
 
 /* =========================
    HELPERS
@@ -440,7 +441,7 @@ export default function ProductDetailNuevo() {
 
                         <div className="text-4xl font-semibold text-black mb-4">
                             {finalPrice !== null
-                                ? `${pricePrefix}${Number(finalPrice).toLocaleString("es-AR")}`
+                                ? `${pricePrefix}${formatPrice(finalPrice)}`
                                 : "Consultar"}
                         </div>
                         {sizeOptions.length > 0 && (

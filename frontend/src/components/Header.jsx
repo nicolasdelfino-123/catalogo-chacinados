@@ -7,6 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo22 from '@/assets/logo-22.png' */
 import zarpados from '@/assets/zarpados-22.png'
 import { withWholesale } from "../utils/navigation.js";
+import { formatPrice } from "../utils/price.js";
 import { Search, ShoppingBag } from "lucide-react";
 import shatha from '@/assets/shathasi.png'
 
@@ -593,11 +594,11 @@ export default function Header() {
                               {location.pathname.startsWith("/mayorista")
                                 ? (
                                   wholesalePrice && wholesalePrice > 0
-                                    ? `US$${Number(wholesalePrice).toLocaleString("es-AR")}`
+                                    ? `US$${formatPrice(wholesalePrice)}`
                                     : "Consultar"
                                 )
                                 : (retailPrice && retailPrice > 0
-                                  ? `$${Number(retailPrice).toLocaleString("es-AR")}`
+                                  ? `$${formatPrice(retailPrice)}`
                                   : "Consultar")
                               }
                             </div>
