@@ -93,7 +93,7 @@ const Footer = () => {
                                         href="mailto:xxx@gmail.com"
                                         className="relative hover:text-amber-300 transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-amber-400 after:transition-all after:duration-300 hover:after:w-full"
                                     >
-                                        Email: email@gmail.com
+                                        Email: shathaperfumeslv@gmail.com
                                     </a>
                                 </li>
                                 <li>
