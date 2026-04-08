@@ -239,12 +239,11 @@ export default function Header() {
 
   // Categorías para el dropdown (coinciden con las del backend)
   const categoryIcons = {
-    1: "🖤",
-    2: "🌸",
-    3: "✨",
-    // 4: "🧴",
-    // 5: "🌸",
-    // 7: "🏷️",
+    1: "🔥",
+    2: "🍖",
+    3: "🌭",
+    4: "🧀",
+    5: "🥩",
   };
   const productCategories = PERFUME_CATEGORY_DEFINITIONS.map((category) => ({
     name: category.name,

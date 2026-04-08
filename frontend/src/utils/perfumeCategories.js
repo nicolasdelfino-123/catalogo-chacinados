@@ -1,64 +1,103 @@
 export const PERFUME_CATEGORY_DEFINITIONS = [
-    { id: 1, name: "Fragancias de Hombre", slug: "perfumes-masculinos" },
-    { id: 2, name: "Fragancias de Mujer", slug: "femeninos" },
-    { id: 3, name: "Productos Karseell", slug: "unisex" },
-    // { id: 4, name: "Cremas", slug: "cremas" },
-    // { id: 5, name: "Body Splash Victoria Secret", slug: "body-splash-victoria-secret" },
-    // { id: 7, name: "Perfumes de Diseñador", slug: "perfumes-de-disenador" },
+    { id: 1, name: "Ahumados", slug: "ahumados" },
+    { id: 2, name: "Jamones", slug: "jamones" },
+    { id: 3, name: "Chorizos", slug: "chorizos" },
+    { id: 4, name: "Lácteos", slug: "lacteos" },
+    { id: 5, name: "Otros", slug: "otros" },
 ];
 
 export const PERFUME_CATEGORY_NAMES = PERFUME_CATEGORY_DEFINITIONS.map((category) => category.name);
 
+const normalizeCategoryValue = (value = "") =>
+    String(value || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ");
+
 export const CATEGORY_ID_TO_NAME = PERFUME_CATEGORY_DEFINITIONS.reduce(
     (acc, category) => ({ ...acc, [category.id]: category.name }),
     {
-        6: "Masculinos",
+        6: "Ahumados",
     }
 );
 
-export const CATEGORY_NAME_TO_ID = {
-    "Fragancias de Hombre": 1,
-    Masculinos: 1,
-    "Perfumes masculinos": 1,
-    "Perfumes Masculinos": 1,
-    "Fragancias de Mujer": 2,
-    Femeninos: 2,
-    "Productos Karseell": 3,
-    Unisex: 3,
-    // Cremas: 4,
-    // "Body Splash Victoria Secret": 5,
-    // "Body splash victoria secret": 5,
-    // "Perfumes de Diseñador": 7,
-    // "Perfumes de Disenador": 7,
+const CATEGORY_ALIASES = {
+    1: [
+        "Ahumados",
+        "Fragancias de Hombre",
+        "Masculinos",
+        "Perfumes masculinos",
+        "Perfumes Masculinos",
+        "Vapes Desechables",
+        "Perfumes",
+    ],
+    2: [
+        "Jamones",
+        "Fragancias de Mujer",
+        "Femeninos",
+        "Pods Recargables",
+    ],
+    3: [
+        "Chorizos",
+        "Productos Karseell",
+        "Unisex",
+        "Líquidos",
+        "Liquidos",
+    ],
+    4: [
+        "Lácteos",
+        "Lacteos",
+        "Cremas",
+        "Resistencias",
+    ],
+    5: [
+        "Otros",
+        "Body Splash Victoria Secret",
+        "Body splash victoria secret",
+        "Perfumes de Diseñador",
+        "Perfumes de Disenador",
+        "Celulares",
+    ],
 };
 
-export const LEGACY_CATEGORY_NAME_TO_CURRENT = {
-    "Vapes Desechables": "Masculinos",
-    "Pods Recargables": "Femeninos",
-    "Líquidos": "Unisex",
-    Resistencias: "Cremas",
-    Celulares: "Body Splash Victoria Secret",
-    Perfumes: "Masculinos",
-    "Body splash victoria secret": "Body Splash Victoria Secret",
-    "Body Splash Victoria Secret": "Body Splash Victoria Secret",
-    "Perfumes de Disenador": "Perfumes de Diseñador",
-};
+export const CATEGORY_NAME_TO_ID = Object.entries(CATEGORY_ALIASES).reduce((acc, [id, names]) => {
+    names.forEach((name) => {
+        acc[name] = Number(id);
+    });
+    return acc;
+}, {});
+
+export const LEGACY_CATEGORY_NAME_TO_CURRENT = Object.entries(CATEGORY_ALIASES).reduce((acc, [id, names]) => {
+    const currentName = CATEGORY_ID_TO_NAME[Number(id)];
+    names.forEach((name) => {
+        acc[name] = currentName;
+    });
+    return acc;
+}, {});
 
 export const SLUG_TO_NAME = PERFUME_CATEGORY_DEFINITIONS.reduce(
     (acc, category) => ({ ...acc, [category.slug]: category.name }),
     {
-        "vapes-desechables": "Masculinos",
-        "pods-recargables": "Femeninos",
-        liquidos: "Unisex",
-        resistencias: "Cremas",
-        celulares: "Body Splash Victoria Secret",
-        perfumes: "Masculinos",
+        "perfumes-masculinos": "Ahumados",
+        femeninos: "Jamones",
+        unisex: "Chorizos",
+        "vapes-desechables": "Ahumados",
+        "pods-recargables": "Jamones",
+        liquidos: "Chorizos",
+        resistencias: "Lácteos",
+        celulares: "Otros",
+        perfumes: "Ahumados",
     }
 );
 
 export const SLUG_TO_ID = PERFUME_CATEGORY_DEFINITIONS.reduce(
     (acc, category) => ({ ...acc, [category.slug]: category.id }),
     {
+        "perfumes-masculinos": 1,
+        femeninos: 2,
+        unisex: 3,
         "vapes-desechables": 1,
         "pods-recargables": 2,
         liquidos: 3,
@@ -68,39 +107,34 @@ export const SLUG_TO_ID = PERFUME_CATEGORY_DEFINITIONS.reduce(
     }
 );
 
-export const NAME_TO_SLUG = {
-    Masculinos: "perfumes-masculinos",
-    "Perfumes masculinos": "perfumes-masculinos",
-    "Perfumes Masculinos": "perfumes-masculinos",
-    Femeninos: "femeninos",
-    Unisex: "unisex",
-    Cremas: "cremas",
-    "Body splash victoria secret": "body-splash-victoria-secret",
-    "Body Splash Victoria Secret": "body-splash-victoria-secret",
-    "Perfumes de Diseñador": "perfumes-de-disenador",
-    "Perfumes de Disenador": "perfumes-de-disenador",
-    "Vapes Desechables": "perfumes-masculinos",
-    "Pods Recargables": "femeninos",
-    "Líquidos": "unisex",
-    Resistencias: "cremas",
-    Celulares: "body-splash-victoria-secret",
-    Perfumes: "perfumes-masculinos",
-};
+export const NAME_TO_SLUG = Object.entries(CATEGORY_ALIASES).reduce((acc, [id, names]) => {
+    const slug = PERFUME_CATEGORY_DEFINITIONS.find((category) => category.id === Number(id))?.slug;
+    if (!slug) return acc;
+
+    names.forEach((name) => {
+        acc[name] = slug;
+    });
+    return acc;
+}, {});
 
 export const mapCategoryIdFromName = (value = "") => {
-    const normalized = String(value || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+    const normalized = normalizeCategoryValue(value);
 
-    if (normalized.includes("disen")) return 7;
-    if (normalized.includes("mascul")) return 1;
-    if (normalized.includes("femen")) return 2;
-    if (normalized.includes("unisex")) return 3;
-    if (normalized.includes("crema")) return 4;
-    if (normalized.includes("body") || normalized.includes("victoria")) return 5;
-    if (normalized.includes("perfume")) return 1;
+    if (!normalized) return 1;
+
+    if (normalized.includes("ahum")) return 1;
+    if (normalized.includes("jamon")) return 2;
+    if (normalized.includes("choriz")) return 3;
+    if (normalized.includes("lacteo") || normalized.includes("crema")) return 4;
+    if (normalized.includes("otro")) return 5;
+
+    if (normalized.includes("disen")) return 5;
+    if (normalized.includes("body") || normalized.includes("victoria") || normalized.includes("celular")) return 5;
+    if (normalized.includes("mascul") || normalized.includes("vapes") || normalized.includes("perfume")) return 1;
+    if (normalized.includes("femen") || normalized.includes("pod")) return 2;
+    if (normalized.includes("unisex") || normalized.includes("karseell") || normalized.includes("liquido")) return 3;
+    if (normalized.includes("resistencia")) return 4;
+
     return 1;
 };
 
