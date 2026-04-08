@@ -2,7 +2,7 @@ export const storeConfig = {
     storeName: "Attar Perfumes",
 
     branding: {
-        heroTitle: "Fragancias Árabes 100% Originales",
+        heroTitle: "Embutidos y Fiambres Al Mayor",
         heroSubtitle: "Contamos con stock y variedad permanente",
         /*       footerText: "Perfumes árabes originales en Argentina.", */
     },
@@ -31,8 +31,8 @@ export const storeConfig = {
     },
 
     media: {
-        heroImage: "portada_si.jpeg",
-        footerLogo: "logo_attar_2_si.jpeg",
+        heroImage: "hero.jpg",
+        footerLogo: "header_si.png",
     },
 
     map: {

@@ -3,22 +3,10 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Context } from "../js/store/appContext.jsx";
 import ProductCardPerfumes from "../components/ui/cards/ProductCardPerfumes.jsx";
 import HomeContact from "../components/home/HomeContact.jsx";
-import banner from "../assets/banner_arabe.jpg";
+/* import banner from "../assets/hero.jpg"; */
 import Asesoria from "../components/Asesoria.jsx";
 import { storeConfig } from "../config/storeConfig";
 import perfumeImg from "../assets/latta_si.webp";
-
-import afnan from '../assets/afnan.webp'
-import al from '../assets/al.webp'
-import alhara from '../assets/alhara.png'
-import armaf from '../assets/armaf.webp'
-import bharara from '../assets/bharara.webp'
-import french from '../assets/french.webp'
-
-import lattafa from '../assets/lattafa.png'
-import maison from '../assets/maison.jpg'
-import rasasi from '../assets/rasasi.png'
-import ray from '../assets/raysi.jpg'
 
 export default function InicioNuevo() {
     const { store, actions } = useContext(Context);
@@ -143,10 +131,10 @@ md:mt-[350px]     /* DESKTOP mover bloque */
 
             </section>
 
-            <div className="relative z-10 overflow-hidden whitespace-nowrap bg-gradient-to-r from-black via-[#0B0608] to-black py-3">
-                {/* TRACK con 2 grupos idénticos → loop perfecto */}
+            {/* <div className="relative z-10 overflow-hidden whitespace-nowrap bg-gradient-to-r from-black via-[#0B0608] to-black py-3">
+             
                 <div className="marquee-track will-change-transform">
-                    {/* Grupo 1 */}
+
                     <div className="marquee-group">
                         <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
                             3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
@@ -155,7 +143,7 @@ md:mt-[350px]     /* DESKTOP mover bloque */
                             3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
                         </span>
                     </div>
-                    {/* Grupo 2 (clon) */}
+     
                     <div className="marquee-group" aria-hidden="true">
                         <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
                             3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
@@ -165,14 +153,14 @@ md:mt-[350px]     /* DESKTOP mover bloque */
                         </span>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <style>{`
     .marquee-track {
       display: inline-flex;
       animation: marquee 32s linear infinite;
     }
-    .marquee-group {
+    .marquee-group {/*  */
       display: inline-flex;
     }
     /* Se anima solo hasta -50% porque hay 2 grupos idénticos → no hay baches */
@@ -316,9 +304,9 @@ shadow-lg shadow-amber-500/20
   `}</style>
             </section>
             <section className="relative bg-white py-8 fade-in-section border-y border-gray-200">
-                <div className="relative z-10 overflow-hidden whitespace-nowrap mx-0 md:mx-[104px]">
+                {/*   <div className="relative z-10 overflow-hidden whitespace-nowrap mx-0 md:mx-[104px]">
                     <div className="brands-track will-change-transform">
-                        {/* Grupo 1 */}
+               
                         <div className="brands-group">
                             <div className="brand-container">
                                 <img src={afnan} alt="Afnan" className="brand-img" />
@@ -352,7 +340,7 @@ shadow-lg shadow-amber-500/20
                             </div>
                         </div>
 
-                        {/* Grupo 2 (duplicado para scroll continuo) */}
+                      
                         <div className="brands-group" aria-hidden="true">
                             <div className="brand-container">
                                 <img src={afnan} alt="Afnan" className="brand-img" />
@@ -387,7 +375,7 @@ shadow-lg shadow-amber-500/20
                         </div>
                     </div>
                 </div>
-
+ */}
                 <style>{`
         .brands-track {
             display: inline-flex;

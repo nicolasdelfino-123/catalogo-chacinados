@@ -9,7 +9,7 @@ import zarpados from '@/assets/zarpados-22.png'
 import { withWholesale } from "../utils/navigation.js";
 import { formatPrice } from "../utils/price.js";
 import { Search, ShoppingCart } from "lucide-react";
-import shatha from '@/assets/logo_attar_prueba.png'
+import shatha from '@/assets/header_si.png'
 import { PERFUME_CATEGORY_DEFINITIONS } from "../utils/perfumeCategories.js";
 
 const API = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "";
@@ -303,7 +303,7 @@ export default function Header() {
     <>
       <header
         className={[
-          "fixed top-0 left-0 right-0 md:sticky md:top-0 z-50 bg-[#0B0608]/95 border-b border-yellow-600/20 overflow-visible",
+          "fixed top-0 left-0 right-0 md:sticky md:top-0 z-50 bg-black border-b border-amber-500/30 border-b border-yellow-600/20 overflow-visible",
           "transition-shadow duration-300",
           isScrolled ? "shadow-lg" : "shadow-none"
         ].join(" ")}
