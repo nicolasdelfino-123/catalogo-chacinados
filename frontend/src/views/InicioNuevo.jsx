@@ -8,6 +8,17 @@ import Asesoria from "../components/Asesoria.jsx";
 import { storeConfig } from "../config/storeConfig";
 import perfumeImg from "../assets/latta_si.webp";
 
+import afnan from '../assets/afnan.webp'
+import al from '../assets/al.webp'
+import alhara from '../assets/alhara.png'
+import armaf from '../assets/armaf.webp'
+import bharara from '../assets/bharara.webp'
+import french from '../assets/french.webp'
+
+import lattafa from '../assets/lattafa.png'
+import maison from '../assets/maison.jpg'
+import rasasi from '../assets/rasasi.png'
+import ray from '../assets/raysi.jpg'
 
 export default function InicioNuevo() {
     const { store, actions } = useContext(Context);
@@ -132,6 +143,45 @@ md:mt-[350px]     /* DESKTOP mover bloque */
 
             </section>
 
+            <div className="relative z-10 overflow-hidden whitespace-nowrap bg-gradient-to-r from-black via-[#0B0608] to-black py-3">
+                {/* TRACK con 2 grupos idénticos → loop perfecto */}
+                <div className="marquee-track will-change-transform">
+                    {/* Grupo 1 */}
+                    <div className="marquee-group">
+                        <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
+                            3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
+                        </span>
+                        <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
+                            3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
+                        </span>
+                    </div>
+                    {/* Grupo 2 (clon) */}
+                    <div className="marquee-group" aria-hidden="true">
+                        <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
+                            3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
+                        </span>
+                        <span className="text-white text-lg md:text-2xl font-semibold mx-[40px]">
+                            3 cuotas sin interés<span className="mx-6">•</span>Descuentos Pago Efectivo / Transferencia
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <style>{`
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 32s linear infinite;
+    }
+    .marquee-group {
+      display: inline-flex;
+    }
+    /* Se anima solo hasta -50% porque hay 2 grupos idénticos → no hay baches */
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+  `}</style>
+
             {/* PRODUCTOS */}
             <section className="max-w-7xl mx-auto px-2 sm:px-4 py-12">
                 <div className="text-center mb-10">
@@ -237,7 +287,7 @@ shadow-lg shadow-amber-500/20
                     <div className="hidden md:block h-full w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-auto" />
 
                     {/* Columna derecha: mapa (oscuro por CSS) */}
-                    <div className="md:col-span-1">
+                    <div className="hidden md:col-span-1 md:block">
                         <div className="relative">
 
                             <div className="rounded-2xl overflow-hidden shadow-xl">
@@ -265,7 +315,120 @@ shadow-lg shadow-amber-500/20
     }
   `}</style>
             </section>
+            <section className="relative bg-white py-8 fade-in-section border-y border-gray-200">
+                <div className="relative z-10 overflow-hidden whitespace-nowrap mx-0 md:mx-[104px]">
+                    <div className="brands-track will-change-transform">
+                        {/* Grupo 1 */}
+                        <div className="brands-group">
+                            <div className="brand-container">
+                                <img src={afnan} alt="Afnan" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={al} alt="al" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={alhara} alt="alhara" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={armaf} alt="Armaf" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={bharara} alt="Bharara" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={french} alt="French" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={lattafa} alt="Lattafa" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={maison} alt="Maison" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={rasasi} alt="Rasasi" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={ray} alt="Ray" className="brand-img" />
+                            </div>
+                        </div>
 
+                        {/* Grupo 2 (duplicado para scroll continuo) */}
+                        <div className="brands-group" aria-hidden="true">
+                            <div className="brand-container">
+                                <img src={afnan} alt="Afnan" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={al} alt="al" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={alhara} alt="alhara" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={armaf} alt="Armaf" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={bharara} alt="Bharara" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={french} alt="French" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={lattafa} alt="Lattafa" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={maison} alt="Maison" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={rasasi} alt="Rasasi" className="brand-img" />
+                            </div>
+                            <div className="brand-container">
+                                <img src={ray} alt="Ray" className="brand-img" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>{`
+        .brands-track {
+            display: inline-flex;
+            animation: brandsScroll 32s linear infinite;
+        }
+
+        .brands-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-container {
+            width: 180px;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .brand-img {
+            max-height: 4rem;
+            max-width: 140px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        @keyframes brandsScroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+       /*  .brands-track:hover {
+            animation-play-state: paused;
+        } */
+    `}</style>
+            </section>
 
 
         </div>

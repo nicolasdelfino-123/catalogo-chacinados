@@ -1,5 +1,5 @@
 export const storeConfig = {
-    storeName: "Shatha Perfumes",
+    storeName: "Attar Perfumes",
 
     branding: {
         heroTitle: "Fragancias Árabes 100% Originales",
