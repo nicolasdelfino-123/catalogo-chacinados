@@ -99,7 +99,7 @@ const Footer = () => {
                                         {storeConfig.contact.emailDisplay}
                                     </a>
                                 </li>
-                                <li>
+                                {/*  <li>
                                     <a
                                         href={storeConfig.contact.instagram}
                                         target="_blank"
@@ -108,7 +108,7 @@ const Footer = () => {
                                     >
                                         Instagram: {storeConfig.contact.instagramDisplay}
                                     </a>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
 

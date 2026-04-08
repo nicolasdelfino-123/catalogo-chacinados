@@ -18,7 +18,7 @@ export const storeConfig = {
         whatsappMessage: "Hola, quiero consultar por un chacinado del catálogo",
         whatsappDisplay: "+58 412-5349541",
 
-        instagram: "https://www.instagram.com/attarperfumesarabes/",
+        /*  instagram: "https://www.instagram.com/attarperfumesarabes/", */
         instagramDisplay: "@attarperfumesarabes",
 
         email: "nicolasdelfino585@gmail.com",
