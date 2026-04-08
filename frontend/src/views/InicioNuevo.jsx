@@ -223,8 +223,8 @@ shadow-lg shadow-amber-500/20
                 <Asesoria />
             </section> */}
             <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id='asesoria'>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
-                    {/* Columna izquierda: texto */}
+                {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                
                     <div className="md:col-span-1 text-center md:text-left">
                         <span className="inline-block text-lg tracking-wider font-semibold text-gray-700 bg-purple-50 border border-purple-100 rounded-full px-3 py-1">
                             ¡Contactanos!
@@ -241,7 +241,7 @@ shadow-lg shadow-amber-500/20
 
                         <div className="mt-6 flex justify-center md:justify-center gap-4">
 
-                            {/* Instagram */}
+            
                             <a
                                 href={IG_URL}
                                 target="_blank"
@@ -255,7 +255,7 @@ shadow-lg shadow-amber-500/20
                                 </svg>
                             </a>
 
-                            {/* WhatsApp */}
+               
                             <a
                                 href={WA_URL}
                                 target="_blank"
@@ -271,10 +271,10 @@ shadow-lg shadow-amber-500/20
                         </div>
                     </div>
 
-                    {/* Divider central (sólo desktop) */}
+                  
                     <div className="hidden md:block h-full w-px bg-gradient-to-b from-transparent via-gray-300 to-transparent mx-auto" />
 
-                    {/* Columna derecha: mapa (oscuro por CSS) */}
+         
                     <div className="hidden md:col-span-1 md:block">
                         <div className="relative">
 
@@ -286,13 +286,13 @@ shadow-lg shadow-amber-500/20
                                 />
                             </div>
 
-                            {/* efecto decorativo */}
+                   
                             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-200 rounded-full blur-3xl opacity-40"></div>
                         </div>
 
                     </div>
                 </div>
-
+ */}
                 {/* Filtro para “estilo oscuro” del iframe (sin API key) */}
                 <style>{`
     .map-dark iframe {

@@ -170,7 +170,7 @@ export default function Cart({ isOpen: controlledOpen, onClose: controlledOnClos
 
     localStorage.setItem("customerData", JSON.stringify(customerData));
 
-    const phone = "5493512479800";
+    const phone = "584125349541"; // ⚠️ CAMBIAR POR EL NÚMERO DEL VENDEDOR
 
     const orderText = buildWhatsAppMessage();
 

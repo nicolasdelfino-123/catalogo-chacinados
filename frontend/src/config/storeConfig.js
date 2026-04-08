@@ -1,5 +1,5 @@
 export const storeConfig = {
-    storeName: "Attar Perfumes",
+    storeName: "Chacinados Al Mayor",
 
     branding: {
         heroTitle: "Embutidos y Fiambres Al Mayor",
@@ -14,9 +14,9 @@ export const storeConfig = {
     },
 
     contact: {
-        whatsapp: "5493512479800",
-        whatsappMessage: "Hola, quiero consultar por un perfume del catálogo",
-        whatsappDisplay: "+54 9 351 247-9800",
+        whatsapp: "584125349541",
+        whatsappMessage: "Hola, quiero consultar por un chacinado del catálogo",
+        whatsappDisplay: "+58 412-5349541",
 
         instagram: "https://www.instagram.com/attarperfumesarabes/",
         instagramDisplay: "@attarperfumesarabes",
