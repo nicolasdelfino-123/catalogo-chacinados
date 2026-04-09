@@ -451,13 +451,13 @@ export default function Header() {
             >
               Mayoristas
             </Link> */}
-              <a
+              {/*   <a
                 href={withWholesale("/inicio") + "#asesoria"}
                 onClick={goToContact}
                 className="text-gray-300 hover:text-amber-300 transition-all duration-300"
               >
                 Contacto
-              </a>
+              </a> */}
             </nav>
 
             {/* Desktop Actions */}

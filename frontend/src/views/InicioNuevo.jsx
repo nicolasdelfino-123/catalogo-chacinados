@@ -197,7 +197,7 @@ md:mt-[350px]     /* DESKTOP mover bloque */
                 )}
             </section>
             <div className="flex justify-center mt-0 mb-1 lg:px-12 lg:py-12">
-                <div
+                <button
                     onClick={() => navigate(location.pathname.startsWith("/mayorista") ? "/mayorista/products" : "/products")}
                     className="
 cursor-pointer
@@ -217,13 +217,13 @@ shadow-lg shadow-amber-500/20
 "
                 >
                     Explorar todas las categorías
-                </div>
+                </button>
             </div>
             {/*  <section id="asesoria">
                 <Asesoria />
             </section> */}
-            <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id='asesoria'>
-                {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+            {/*        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id='asesoria'> */}
+            {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
                 
                     <div className="md:col-span-1 text-center md:text-left">
                         <span className="inline-block text-lg tracking-wider font-semibold text-gray-700 bg-purple-50 border border-purple-100 rounded-full px-3 py-1">
@@ -293,8 +293,8 @@ shadow-lg shadow-amber-500/20
                     </div>
                 </div>
  */}
-                {/* Filtro para “estilo oscuro” del iframe (sin API key) */}
-                <style>{`
+            {/* Filtro para “estilo oscuro” del iframe (sin API key) */}
+            <style>{`
     .map-dark iframe {
       /* Ajustá estos valores si querés más/menos contraste */
       filter: invert(90%) hue-rotate(180deg) saturate(0.7) brightness(0.85) contrast(1.05);
@@ -302,7 +302,7 @@ shadow-lg shadow-amber-500/20
       transform: translateZ(0);
     }
   `}</style>
-            </section>
+            {/* </section> */}
             <section className="relative bg-white py-8 fade-in-section border-y border-gray-200">
                 {/*   <div className="relative z-10 overflow-hidden whitespace-nowrap mx-0 md:mx-[104px]">
                     <div className="brands-track will-change-transform">

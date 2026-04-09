@@ -31,7 +31,7 @@ export default function FloatingButtons() {
                 aria-label="Accesos rápidos"
             >
                 {/* Instagram */}
-                <a
+                {/*  <a
                     href={IG_URL}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -48,13 +48,13 @@ export default function FloatingButtons() {
             outline-none focus:ring-2 focus:ring-white/50
           "
                 >
-                    {/* ícono simple (SVG) */}
+                
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                         className="w-6 h-6 sm:w-7 sm:h-7 text-white">
                         <path fill="currentColor" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10m0 2.2A2.8 2.8 0 1 0 14.8 12A2.8 2.8 0 0 0 12 9.2M17.25 6.75a1 1 0 1 1-1 1a1 1 0 0 1 1-1" />
                     </svg>
 
-                    {/* Tooltip */}
+         
                     <span className="
             absolute right-full mr-2 hidden sm:block
             whitespace-nowrap
@@ -66,7 +66,7 @@ export default function FloatingButtons() {
           ">
                         Instagram
                     </span>
-                </a>
+                </a> */}
 
                 {/* WhatsApp */}
                 <a
