@@ -96,7 +96,7 @@ export default function AdminBudgetModal({
     onRemoveItem = () => { },
 }) {
     const [priceMode, setPriceMode] = useState(PRICE_MODE_RETAIL);
-    const [prices, setPrices] = useState({});
+    const [priceOverrides, setPriceOverrides] = useState({});
     const [editingId, setEditingId] = useState(null);
     const [editingDraft, setEditingDraft] = useState("");
     const [customerName, setCustomerName] = useState("");
@@ -114,7 +114,6 @@ export default function AdminBudgetModal({
         priceDraft: "",
     });
     const previewRef = useRef(null);
-    const previousPriceModeRef = useRef(PRICE_MODE_RETAIL);
     const emptyNewProduct = {
         name: "",
         quantity: 1,
@@ -137,39 +136,17 @@ export default function AdminBudgetModal({
         setManualItems([]);
         setShowAddProduct(false);
         setNewProduct(emptyNewProduct);
-        setPrices({});
-        previousPriceModeRef.current = PRICE_MODE_RETAIL;
+        setPriceOverrides({});
     }, [open]);
 
-    useEffect(() => {
-        if (!open) return;
-
-        const priceModeChanged = previousPriceModeRef.current !== priceMode;
-
-        setPrices((prev) => {
-            const nextPrices = {};
-
-            for (const item of items) {
-                const basePrice = getBasePrice(item, priceMode);
-                nextPrices[item.id] = priceModeChanged
-                    ? basePrice
-                    : (prev[item.id] ?? basePrice);
-            }
-
-            for (const item of manualItems) {
-                const basePrice = getBasePrice(item, priceMode);
-                nextPrices[item.id] = priceModeChanged
-                    ? basePrice
-                    : (prev[item.id] ?? basePrice);
-            }
-
-            return nextPrices;
-        });
-
-        previousPriceModeRef.current = priceMode;
-    }, [items, manualItems, open, priceMode]);
-
     const budgetItems = useMemo(() => [...items, ...manualItems], [items, manualItems]);
+    const prices = useMemo(() => {
+        const nextPrices = {};
+        for (const item of budgetItems) {
+            nextPrices[item.id] = priceOverrides[item.id] ?? getBasePrice(item, priceMode);
+        }
+        return nextPrices;
+    }, [budgetItems, priceMode, priceOverrides]);
 
     const total = useMemo(
         () => budgetItems.reduce((acc, item) => acc + (Number(prices[item.id] ?? 0) * Number(item.quantity || 0)), 0),
@@ -229,19 +206,20 @@ export default function AdminBudgetModal({
                 isManual: true,
             },
         ]);
-        setPrices((prev) => ({ ...prev, [id]: unitPrice }));
+        setPriceOverrides((prev) => ({ ...prev, [id]: unitPrice }));
         setNewProduct(emptyNewProduct);
         setShowAddProduct(false);
     };
 
     const removeBudgetItem = (itemId) => {
+        setPriceOverrides((prev) => {
+            const next = { ...prev };
+            delete next[itemId];
+            return next;
+        });
+
         if (String(itemId).startsWith("manual-")) {
             setManualItems((prev) => prev.filter((item) => item.id !== itemId));
-            setPrices((prev) => {
-                const next = { ...prev };
-                delete next[itemId];
-                return next;
-            });
             return;
         }
         onRemoveItem(itemId);
@@ -462,7 +440,7 @@ export default function AdminBudgetModal({
                                                     onChange={(e) => setEditingDraft(sanitizePriceDraft(e.target.value))}
                                                     onKeyDown={(e) => {
                                                         if (e.key === "Enter") {
-                                                            setPrices((prev) => ({
+                                                            setPriceOverrides((prev) => ({
                                                                 ...prev,
                                                                 [item.id]: parsePriceDraft(editingDraft),
                                                             }));
@@ -480,7 +458,7 @@ export default function AdminBudgetModal({
                                                     type="button"
                                                     className="px-2 py-1 border rounded hover:bg-green-50"
                                                     onClick={() => {
-                                                        setPrices((prev) => ({
+                                                        setPriceOverrides((prev) => ({
                                                             ...prev,
                                                             [item.id]: parsePriceDraft(editingDraft),
                                                         }));
