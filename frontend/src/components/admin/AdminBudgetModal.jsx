@@ -114,6 +114,7 @@ export default function AdminBudgetModal({
         priceDraft: "",
     });
     const previewRef = useRef(null);
+    const previousPriceModeRef = useRef(PRICE_MODE_RETAIL);
     const emptyNewProduct = {
         name: "",
         quantity: 1,
@@ -136,19 +137,36 @@ export default function AdminBudgetModal({
         setManualItems([]);
         setShowAddProduct(false);
         setNewProduct(emptyNewProduct);
+        setPrices({});
+        previousPriceModeRef.current = PRICE_MODE_RETAIL;
     }, [open]);
 
     useEffect(() => {
         if (!open) return;
 
-        const nextPrices = {};
-        for (const item of items) {
-            nextPrices[item.id] = getBasePrice(item, priceMode);
-        }
-        for (const item of manualItems) {
-            nextPrices[item.id] = Number(prices[item.id] ?? 0);
-        }
-        setPrices(nextPrices);
+        const priceModeChanged = previousPriceModeRef.current !== priceMode;
+
+        setPrices((prev) => {
+            const nextPrices = {};
+
+            for (const item of items) {
+                const basePrice = getBasePrice(item, priceMode);
+                nextPrices[item.id] = priceModeChanged
+                    ? basePrice
+                    : (prev[item.id] ?? basePrice);
+            }
+
+            for (const item of manualItems) {
+                const basePrice = getBasePrice(item, priceMode);
+                nextPrices[item.id] = priceModeChanged
+                    ? basePrice
+                    : (prev[item.id] ?? basePrice);
+            }
+
+            return nextPrices;
+        });
+
+        previousPriceModeRef.current = priceMode;
     }, [items, manualItems, open, priceMode]);
 
     const budgetItems = useMemo(() => [...items, ...manualItems], [items, manualItems]);
