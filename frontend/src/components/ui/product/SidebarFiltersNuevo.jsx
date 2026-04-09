@@ -22,7 +22,7 @@ export default function SidebarFiltersNuevo({
     onToggleBrand = () => { },
     onClearBrands = () => { },
 
-    // Mililitros
+    // Peso
     mlOptions = [], // [{ value, label, count }]
     selectedMls = [],
     onToggleMl = () => { },
@@ -123,12 +123,12 @@ export default function SidebarFiltersNuevo({
             });
         }
 
-        // Mililitros
+        // Peso
         for (const ml of selectedMls || []) {
             tags.push({
                 type: "ml",
                 key: ml,
-                label: `${ml}ml`,
+                label: `${ml}kg`,
                 onRemove: () => onToggleMl?.(ml),
             });
         }
@@ -329,11 +329,11 @@ export default function SidebarFiltersNuevo({
                 </div>
             )}
 
-            {/* Mililitros */}
+            {/* Peso */}
             {mlOptions.length > 0 && (
                 <div>
                     <h4 className="font-serif text-base mb-3 tracking-wide text-[#232325]">
-                        Mililitros
+                        Peso
                     </h4>
 
                     <div className="flex items-center justify-between mb-2">

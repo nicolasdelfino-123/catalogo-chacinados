@@ -288,7 +288,7 @@ export default function ProductCardPerfumes({ product, returnTo, isGrid = true }
                     {hasVolume && (
                         <div className="flex items-center justify-between mb-2 sm:mb-3">
                             <span className="text-[10px] sm:text-xs text-stone-600 uppercase tracking-wide">
-                                Tamaño
+                                Peso
                             </span>
                             <div className="flex flex-wrap justify-end gap-1 sm:gap-2 max-w-[65%]">
                                 {sizeOptions.map((opt) => {
@@ -303,7 +303,7 @@ export default function ProductCardPerfumes({ product, returnTo, isGrid = true }
                                                 : "border-stone-300 text-stone-600 hover:border-black"
                                                 }`}
                                         >
-                                            {opt.ml}ml
+                                            {opt.ml}kg
                                         </button>
                                     );
                                 })}

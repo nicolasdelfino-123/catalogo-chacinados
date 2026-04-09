@@ -109,7 +109,7 @@ export default function Cart({ isOpen: controlledOpen, onClose: controlledOnClos
       const name = item.name;
       const flavor = item.selectedFlavor ? ` (${item.selectedFlavor})` : "";
       const sizeMl = getSelectedMl(item);
-      const size = sizeMl ? ` • ${sizeMl}ml` : "";
+      const size = sizeMl ? ` • ${sizeMl}kg` : "";
       const qty = Number(item.quantity) || 0;
 
       const wholesalePrice = Number(item.price_wholesale);
@@ -361,7 +361,7 @@ Pago: ${customerData.payment}
                           </p>
                           {getSelectedMl(item) && (
                             <p className="text-xs text-gray-500 mt-0.5">
-                              Tamaño: {getSelectedMl(item)}ml
+                              Peso: {getSelectedMl(item)}kg
                             </p>
                           )}
 

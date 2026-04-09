@@ -424,7 +424,7 @@ export default function ProductDetailNuevo() {
                         {sizeOptions.length > 0 && (
                             <div className="mb-4">
                                 <p className="text-xs font-serif text-stone-600 tracking-wide mb-2">
-                                    Tamaño: {selectedSize?.ml}ml
+                                    Peso: {selectedSize?.ml}kg
                                 </p>
                                 <div className="flex flex-wrap gap-2">
                                     {sizeOptions.map((opt) => {
@@ -439,7 +439,7 @@ export default function ProductDetailNuevo() {
                                                     : "border-stone-300 text-stone-600 hover:border-black"
                                                     }`}
                                             >
-                                                {opt.ml}ml
+                                                {opt.ml}kg
                                             </button>
                                         );
                                     })}

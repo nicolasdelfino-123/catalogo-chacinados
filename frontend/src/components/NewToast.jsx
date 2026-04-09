@@ -97,7 +97,7 @@ export default function NewToast({ toast, onClose }) {
                             <span className="text-xs sm:text-sm text-gray-300">
                                 {data.product.name}
                                 {selectedMl && (
-                                    <span className="text-amber-300"> · {selectedMl}ml</span>
+                                    <span className="text-amber-300"> · {selectedMl}kg</span>
                                 )}
                             </span>
 

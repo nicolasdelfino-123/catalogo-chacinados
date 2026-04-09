@@ -195,8 +195,8 @@ export default function AdminBudgetModal({
         const unitPrice = parsePriceDraft(newProduct.priceDraft);
         const id = `manual-${Date.now()}`;
         const normalizedMlLabel = mlValue
-            ? (/\bml\b/i.test(mlValue) ? mlValue : `${mlValue} ML`)
-            : "Sin ML";
+            ? (/\bkg\b/i.test(mlValue) ? mlValue : `${mlValue}kg`)
+            : "Sin peso";
 
         setManualItems((prev) => [
             ...prev,
@@ -373,7 +373,7 @@ export default function AdminBudgetModal({
                                         value={newProduct.ml}
                                         onChange={(e) => setNewProduct((prev) => ({ ...prev, ml: e.target.value }))}
                                         className="w-full border rounded-lg px-3 py-2 bg-white"
-                                        placeholder="ML"
+                                        placeholder="Peso (kg)"
                                     />
                                 </div>
 
@@ -429,7 +429,7 @@ export default function AdminBudgetModal({
                                             {item.quantity}x {item.name}
                                         </div>
                                         <div className="text-sm text-stone-500">
-                                            {item.mlLabel || "Sin ML"}
+                                            {item.mlLabel || "Sin peso"}
                                         </div>
                                     </div>
 

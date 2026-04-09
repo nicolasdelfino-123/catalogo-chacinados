@@ -487,7 +487,11 @@ export default function AdminProducts() {
     const startEditPrice = (p, currentPrice) => {
         setEditingPriceId(p.id);
         // mantengo como string lo que ve el usuario
-        setEditingPrice(String(currentPrice ?? p.price ?? ""));
+        setEditingPrice(
+            currentPrice == null || currentPrice === ""
+                ? ""
+                : formatEditableMoney(currentPrice)
+        );
     };
     const startEditWholesale = (product, currentWholesale) => {
         setEditingWholesaleId(product.id);
@@ -507,8 +511,8 @@ export default function AdminProducts() {
 
     const confirmEditPrice = async () => {
         if (!editingPriceId) return;
-        const newPriceNum = Number(editingPrice);
-        if (!Number.isFinite(newPriceNum) || newPriceNum < 0) {
+        const newPriceNum = parseFlexibleDecimal(editingPrice);
+        if (newPriceNum !== null && (!Number.isFinite(newPriceNum) || newPriceNum < 0)) {
             alert("Precio inválido");
             return;
         }
@@ -887,7 +891,7 @@ export default function AdminProducts() {
             const finalStock = allVolumeOptions.length > 0
                 ? stockFromVolumes
                 : Number(form.stock ?? 0);
-            const directRetail = Number(form.price);
+            const directRetail = parseFlexibleDecimal(form.price);
             const directWholesale = parseFlexibleDecimal(form.price_wholesale);
             const payload = {
                 ...cleanForm,
@@ -1087,7 +1091,7 @@ export default function AdminProducts() {
                     name: product.name,
                     quantity,
                     ml: mlValue,
-                    mlLabel: mlValue ? `${mlValue} ML` : "Sin ML",
+                    mlLabel: mlValue ? `${mlValue}kg` : "Sin peso",
                     retailPrice: Number.isFinite(Number(selectedOption?.price)) ? Number(selectedOption.price) : 0,
                     wholesalePrice:
                         Number.isFinite(Number(selectedOption?.price_wholesale)) && Number(selectedOption.price_wholesale) > 0
@@ -1424,7 +1428,7 @@ export default function AdminProducts() {
                             <th className="p-2 text-left">Producto</th>
                             <th className="hidden p-2 text-left md:table-cell">Descripción corta</th>
                             <th className="hidden p-2 text-left md:table-cell">Descripción larga</th>
-                            <th className="p-2 text-center">ML</th>
+                            <th className="p-2 text-center">Peso</th>
                             <th className="p-2">
                                 <span className="md:hidden">Min</span>
                                 <span className="hidden md:inline">Precio minorista</span>
@@ -1507,7 +1511,7 @@ export default function AdminProducts() {
                                                             : "sin_ml";
                                                     return (
                                                         <option key={`${p.id}-${key}`} value={key}>
-                                                            {key === "sin_ml" ? "Sin ML" : `${key} ML`}
+                                                            {key === "sin_ml" ? "Sin peso" : `${key}kg`}
                                                         </option>
                                                     );
                                                 })}
@@ -1519,13 +1523,10 @@ export default function AdminProducts() {
                                                     <input
                                                         className="w-20 md:w-24 border rounded px-2 py-1 text-right tabular-nums"
                                                         type="text"
-                                                        inputMode="numeric"
+                                                        inputMode="decimal"
                                                         autoFocus
-                                                        value={Number(editingPrice || 0).toLocaleString("es-AR")}
-                                                        onChange={(e) => {
-                                                            const raw = e.target.value.replace(/\./g, "").replace(/[^\d]/g, "");
-                                                            setEditingPrice(raw);
-                                                        }}
+                                                        value={editingPrice ?? ""}
+                                                        onChange={(e) => setEditingPrice(e.target.value.replace(/[^\d,.\s]/g, ""))}
                                                         onKeyDown={(e) => {
                                                             if (e.key === "Enter") confirmEditPrice();
                                                             if (e.key === "Escape") cancelEditPrice();
@@ -1550,7 +1551,7 @@ export default function AdminProducts() {
                                                 </div>
                                             ) : (
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <span className="whitespace-nowrap tabular-nums">$ {Number(retailShown).toLocaleString("es-AR")}</span>
+                                                    <span className="whitespace-nowrap tabular-nums">$ {formatPrice(retailShown)}</span>
                                                     <button
                                                         type="button"
                                                         className="px-2 py-1 border rounded hover:bg-gray-50"
@@ -2043,10 +2044,10 @@ export default function AdminProducts() {
 
                         <div className="flex items-end gap-2">
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Mililitros (ml)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Peso (kg)</label>
                                 <input
                                     className="w-full border rounded px-3 py-2"
-                                    placeholder="Ej: 100, 200, 500"
+                                    placeholder="Ej: 1, 3, 5"
                                     type="number"
                                     min={0}
                                     step={1}
@@ -2069,7 +2070,7 @@ export default function AdminProducts() {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Stock (ml)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Stock (kg)</label>
                                 <input
                                     className="w-full border rounded px-3 py-2"
                                     placeholder="Ej: 20"
@@ -2099,7 +2100,7 @@ export default function AdminProducts() {
                                 className="h-10 px-3 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
                                 onClick={() => {
                                     const ml = Number(form.volume_ml);
-                                    const price = Number(form.price);
+                                    const price = parseFlexibleDecimal(form.price);
                                     const priceWholesale = parseFlexibleDecimal(form.price_wholesale);
                                     const stock = Math.max(0, Math.floor(Number(form.volume_stock) || 0));
                                     const row = {
@@ -2145,17 +2146,13 @@ export default function AdminProducts() {
                                         className="w-full border rounded pl-7 pr-3 py-2"
                                         placeholder="Precio minorista"
                                         type="text"
-                                        inputMode="numeric"
+                                        inputMode="decimal"
                                         {...noSpin}
-                                        value={
-                                            form.price
-                                                ? Number(form.price).toLocaleString("es-AR")
-                                                : ""
-                                        }
+                                        value={form.price ?? ""}
                                         onChange={(e) =>
                                             setForm({
                                                 ...form,
-                                                price: e.target.value.replace(/\D/g, "")
+                                                price: e.target.value.replace(/[^\d,.\s]/g, "")
                                             })
                                         }
                                     />
@@ -2196,7 +2193,7 @@ export default function AdminProducts() {
                                 {(form.volume_options || []).map((row, idx) => (
                                     <div key={`${row.ml}-${idx}`} className="flex items-center justify-between text-sm border rounded px-3 py-2">
                                         <span>
-                                            {row.ml != null ? `${row.ml} ml` : "Sin ml"} · {Number(row.price) > 0 ? `$${Number(row.price).toLocaleString("es-AR")}` : "Consultar"}
+                                            {row.ml != null ? `${row.ml}kg` : "Sin peso"} · {Number(row.price) > 0 ? `$${formatPrice(row.price)}` : "Consultar"}
                                             {Number(row.price_wholesale) > 0
                                                 ? ` · Mayorista $${formatPrice(row.price_wholesale)}`
                                                 : ""}
@@ -2213,7 +2210,7 @@ export default function AdminProducts() {
                                                         ...prev,
                                                         volume_ml: row.ml ?? "",
                                                         volume_stock: Number.isFinite(Number(row?.stock)) ? String(row.stock) : "",
-                                                        price: Number(row?.price) > 0 ? String(row.price) : "",
+                                                        price: Number(row?.price) > 0 ? formatEditableMoney(row.price) : "",
                                                         price_wholesale:
                                                             Number(row?.price_wholesale) > 0 ? formatPrice(row.price_wholesale) : "",
 
@@ -2573,7 +2570,7 @@ export default function AdminProducts() {
                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]">
                                 <div className="bg-white rounded-lg p-5 w-full max-w-md space-y-4">
                                     <p className="text-sm text-gray-800">
-                                        Hay una combinación de precios y mililitros sin agregar.
+                                        Hay una combinación de precios y peso sin agregar.
                                         <br />
                                         Debes presionar "agregar" antes de guardar.
                                     </p>
@@ -2604,7 +2601,7 @@ export default function AdminProducts() {
                             <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]">
                                 <div className="bg-white rounded-lg p-5 w-full max-w-md space-y-4">
                                     <p className="text-sm text-gray-800">
-                                        Estás cargando un precio minorista sin mililitros.
+                                        Estás cargando un precio minorista sin peso.
                                         <br />
                                         El producto se puede guardar igual y el precio quedará como precio general.
                                     </p>

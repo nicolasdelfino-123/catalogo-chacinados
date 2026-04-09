@@ -310,7 +310,7 @@ export default function ProductGridNuevo({ category, hideFilters = false }) {
             }
         }
         return Array.from(counter.entries())
-            .map(([value, count]) => ({ value, count, label: `${value}ml` }))
+            .map(([value, count]) => ({ value, count, label: `${value}kg` }))
             .sort((a, b) => a.value - b.value);
     }, [categoryProducts]);
 
