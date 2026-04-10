@@ -8,7 +8,7 @@
 
 const PERSISTENT_TOKEN_KEY = "persistent_token";
 const TOKEN_EXPIRY_KEY = "token_expiry";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "";
 
 /**
  * Login con sesión persistente (7 días sin caída)
