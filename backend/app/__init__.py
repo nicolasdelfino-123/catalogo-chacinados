@@ -26,7 +26,7 @@ def create_app():
     enviroment = os.getenv("FLASK_ENV", "production")
 
     if enviroment == "production":
-        static_folder = "/var/www/catalogo/catalogo-attar/frontend/dist"
+        static_folder = "/var/www/catalogo/catalogo-chacinados/frontend/dist"
     else:
         static_folder = "frontend/dist"
 
