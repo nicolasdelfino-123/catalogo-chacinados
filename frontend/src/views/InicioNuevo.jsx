@@ -7,6 +7,7 @@ import HomeContact from "../components/home/HomeContact.jsx";
 import Asesoria from "../components/Asesoria.jsx";
 import { storeConfig } from "../config/storeConfig";
 import perfumeImg from "../assets/latta_si.webp";
+import ResenasCarousel from "../components/home/ResenasCarousel.jsx";
 
 export default function InicioNuevo() {
     const { store, actions } = useContext(Context);
@@ -219,6 +220,7 @@ shadow-lg shadow-amber-500/20
                     Explorar todas las categorías
                 </button>
             </div>
+            <ResenasCarousel />
             {/*  <section id="asesoria">
                 <Asesoria />
             </section> */}
