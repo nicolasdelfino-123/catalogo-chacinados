@@ -4,7 +4,9 @@ import { Context } from "../js/store/appContext.jsx";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 
-const API = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "";
+const API = (
+  import.meta.env.VITE_BACKEND_URL || "https://embutidosalmayor.catalogoweb.ar"
+).replace(/\/+$/, "");
 
 // --- helpers ---
 const normalizeImagePath = (u = "") => {
