@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, "") || "";
+const API = (
+    import.meta.env.VITE_BACKEND_URL || "https://embutidosalmayor.catalogoweb.ar"
+).replace(/\/+$/, "");
 
 export default function AdminPedidos() {
     const [orders, setOrders] = useState([]);
@@ -14,15 +16,23 @@ export default function AdminPedidos() {
 
     const fetchOrders = async () => {
         try {
-            const res = await fetch(`${API}/admin/orders`, {
-                headers: { Authorization: `Bearer ${token}` },
+            let res = await fetch(`${API}/admin/orders`, {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
             });
+
+            if (!res.ok && [401, 403].includes(res.status)) {
+                res = await fetch(`${API}/admin/pedidos`);
+            }
+
+            if (!res.ok) throw new Error("No se pudieron cargar los pedidos");
+
             const data = await res.json();
 
             // ✅ No tocamos los datos, el backend ya manda public_order_number correcto
-            setOrders(data || []);
+            setOrders(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error("Error fetching orders:", err);
+            setOrders([]);
         }
     };
 
