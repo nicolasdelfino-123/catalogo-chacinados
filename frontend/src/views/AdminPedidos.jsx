@@ -8,6 +8,8 @@ const API = (
 export default function AdminPedidos() {
     const [orders, setOrders] = useState([]);
     const [selected, setSelected] = useState(null); // 🆕 Pedido seleccionado
+    const [loadingOrders, setLoadingOrders] = useState(true);
+    const [loadError, setLoadError] = useState("");
     const [loadingId, setLoadingId] = useState(null);
     const navigate = useNavigate();
 
@@ -15,16 +17,15 @@ export default function AdminPedidos() {
         localStorage.getItem("token") || localStorage.getItem("admin_token");
 
     const fetchOrders = async () => {
+        setLoadingOrders(true);
+        setLoadError("");
+
         try {
-            let res = await fetch(`${API}/admin/orders`, {
+            const res = await fetch(`${API}/public/admin/orders`, {
                 headers: token ? { Authorization: `Bearer ${token}` } : {},
             });
 
-            if (!res.ok && [401, 403].includes(res.status)) {
-                res = await fetch(`${API}/admin/pedidos`);
-            }
-
-            if (!res.ok) throw new Error("No se pudieron cargar los pedidos");
+            if (!res.ok) throw new Error(`No se pudieron cargar los pedidos (${res.status})`);
 
             const data = await res.json();
 
@@ -32,7 +33,10 @@ export default function AdminPedidos() {
             setOrders(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error("Error fetching orders:", err);
+            setLoadError("No se pudieron cargar los pedidos. Volvé a iniciar sesión como administrador.");
             setOrders([]);
+        } finally {
+            setLoadingOrders(false);
         }
     };
 
@@ -71,7 +75,15 @@ export default function AdminPedidos() {
             </button>
             <h1 className="text-2xl font-bold mb-4 text-center">Pedidos recibidos</h1>
 
-            {orders.length === 0 && (
+            {loadingOrders && (
+                <p className="text-gray-500 text-center mt-10">Cargando pedidos...</p>
+            )}
+
+            {!loadingOrders && loadError && (
+                <p className="text-red-600 text-center mt-10">{loadError}</p>
+            )}
+
+            {!loadingOrders && !loadError && orders.length === 0 && (
                 <p className="text-gray-500 text-center mt-10">No hay pedidos aún.</p>
             )}
 

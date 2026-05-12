@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request,abort, make_response
 from app import db
-from app.models import Product, Category
+from app.models import Product, Category, User
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 from flask import send_from_directory, current_app
 from app.models import ProductImage
@@ -171,6 +172,52 @@ def serve_image(image_id: int):
     return resp
 
 from app.models import Order, OrderItem, now_cba_naive
+
+
+def public_admin_required():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    return user and user.is_admin
+
+
+@public_bp.route('/admin/orders', methods=['GET'])
+@jwt_required()
+def public_admin_get_orders():
+    if not public_admin_required():
+        return jsonify({"error": "Acceso denegado. Se requieren permisos de administrador."}), 403
+
+    try:
+        orders = Order.query.order_by(Order.created_at.desc()).all()
+        serialized = []
+
+        for o in orders:
+            serialized.append({
+                "id": o.id,
+                "status": o.status,
+                "public_order_number": o.public_order_number,
+                "total_amount": float(o.total_amount or 0),
+                "shipping_cost": float(o.shipping_cost or 0),
+                "payment_method": o.payment_method,
+                "payment_id": o.payment_id,
+                "external_reference": o.external_reference,
+                "customer_first_name": o.customer_first_name,
+                "customer_last_name": o.customer_last_name,
+                "customer_email": o.customer_email,
+                "customer_phone": o.customer_phone,
+                "customer_comment": o.customer_comment,
+                "shipping_address": o.shipping_address,
+                "billing_address": o.billing_address,
+                "created_at": o.created_at.isoformat() if o.created_at else None,
+                "order_items": [item.serialize() for item in o.order_items],
+                "customer_dni": o.customer_dni,
+                "customer_postal_code": (
+                    o.shipping_address.get("postalCode") if isinstance(o.shipping_address, dict) else None
+                ),
+            })
+
+        return jsonify(serialized), 200
+    except Exception as e:
+        return jsonify({"error": f"Error al obtener pedidos: {str(e)}"}), 500
 
 
 @public_bp.route('/orders', methods=['POST'])
